@@ -1,0 +1,161 @@
+.topbtn {
+  float: right;
+  width: 400px;
+  text-align: right;
+  margin-top: 30px;
+  margin-right: 25px;
+}
+
+.btn-secondary {
+  background-color: #8f4700;
+}
+
+.topbtn > button {
+  margin-left: 12px;
+}
+
+.topbtn > a {
+  margin-right: 10px;
+}
+
+.MainTitle {
+  color: #8f4700;
+  text-align: center;
+  padding-top: 60px;
+  margin-top: -14px;
+  margin-bottom: 20px;
+  margin-left: 430px;
+
+  font-weight: 800;
+  font-size: 5rem;
+  font-family: "Dongle", sans-serif;
+}
+
+.body {
+  width: 95%;
+}
+
+.searchbox {
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+  max-width: 100%;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.writebtn {
+  float: right;
+  margin-right: 40px;
+  margin-bottom: 10px;
+}
+
+.body > p {
+  text-align: center;
+}
+
+.row {
+  margin-top: 50px;
+  width: 100%;
+}
+
+.name {
+  margin-bottom: -5px;
+}
+
+.item > p {
+  margin-top: -5px;
+}
+
+.col > a {
+  text-decoration: none;
+  color: black;
+}
+
+#value {
+  width: 500px;
+  font-size: 22px;
+}
+
+.card {
+  max-width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 30px;
+  display: flex; /*
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;*/
+}
+
+.card > img {
+  /*max-Height: 400px;*/
+  height: 100%;
+  border-radius: 10px;
+}
+
+.card-img-top1 {
+  max-width: 80%;
+  display: table-cell;
+  vertical-align: middle;
+}
+@font-face {
+  font-family: "ChungbukNationalUniversity-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/ChungbukNationalUniversity-Regular.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  font-family: "ChungbukNationalUniversity-Regular";
+  color: #576f72;
+}
+
+body::-webkit-scrollbar {
+  width: 15px; /* 스크롤바의 너비 */
+}
+
+body::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #f7f2df; /* 스크롤바의 색상 */
+  background: #f7f2df; /* 스크롤바의 색상 */
+
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: white; /*스크롤바 뒷 배경 색상*/
+}
+
+.navbar-brand {
+  font-size: medium;
+}
+
+.top-bar {
+  /*  background-position: 10%;*/
+  background-size: cover;
+}
+.img-concert {
+  height: 100%;
+} /*
+body {
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ba10c5f1-e098-45fd-b145-1f7f79a2703e/KakaoTalk_Image_2022-07-14-16-16-40.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220714%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220714T071727Z&X-Amz-Expires=86400&X-Amz-Signature=f66e3e3714813440ef64d77af070921059937579372e7868ac73e1d2fe7faab8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22KakaoTalk_Image_2022-07-14-16-16-40.png%22&x-id=GetObject');
+            background-position: center;
+            background-size: cover;
+        }*/
+.book-top-bar {
+  width: 100%;
+  height: 400px;
+  background-image: url("https://s3.us-west-2.amazonaws.com/secure.notion-static.com/04e4f0f5-4db8-4276-b659-352e9b0e60ff/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220718%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220718T090126Z&X-Amz-Expires=86400&X-Amz-Signature=1c310f11c263a37b9af51a41ce2c84441270c83345de45712cdf0e7e1104af42&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject");
+  background-position: center 45%;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+show_book {
+}

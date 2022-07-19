@@ -1,0 +1,11 @@
+## 다음과 같은 확장자는 전체 무시
+*.text
+*.exe
+*.zip
+
+## 폴더 무시
+venv/
+
+#.iml 파일과 idea dir하위 내용 무시
+*.iml
+.idea/

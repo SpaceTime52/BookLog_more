@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <!-- Bulma CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>BookLog Detail Page</title>
+
+    <!-- Local CSS & JS import -->
+    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
+    <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
+    <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
+
+    <style>
+{#        * {
+            color :  black;
+        }
+
+        body {
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ba10c5f1-e098-45fd-b145-1f7f79a2703e/KakaoTalk_Image_2022-07-14-16-16-40.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220714%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220714T071727Z&X-Amz-Expires=86400&X-Amz-Signature=f66e3e3714813440ef64d77af070921059937579372e7868ac73e1d2fe7faab8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22KakaoTalk_Image_2022-07-14-16-16-40.png%22&x-id=GetObject');
+            background-position: center;
+            background-size: cover;
+        }#}
+
+
+        .detail {
+            width: 500px;
+            margin: 60px auto 0px auto;
+            padding-bottom: 60px;
+        }
+
+        option {
+            color: black;
+        }
+
+    </style>
+    <script>
+
+        $(document).ready(function () {
+            let title = $(document).attr('title');
+            render_nav('{{ nickname }}', title);
+            show_detail();
+            addNickname();
+            hidebtn();
+            is_login_state();
+        });
+
+            function show_detail() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/detail/reviewData',
+                    data: {},
+                    success: function (response) {
+
+                        let rows = response['bookData']
+                        for (let i = 0; i< rows.length; i++ ){
+                            let title = rows[i]['title']
+                            let content = rows[i]['content']
+                            let file = rows[i]['file']
+                            let time = rows[i]['time']
+                            let content_no = rows[i]['content_no']
+                            console.log(content_no, title, content,time,file)
+
+                        }
+                    }
+                });
+            }
+
+        function is_login_state () {
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/detail/login",
+                    data: {},
+                    success: function () {
+
+                        $('#id-edit').addClass("is-hidden")
+                        $('#id-delete').addClass("is-hidden")
+
+                    },
+                });
+        }
+
+
+        </script>
+
+    </script>
+</head>
+    <body>
+        <header id="header_above"></header>
+
+        <div class="mask"></div>
+        <div class="detail">
+            <h1>BookLog Detail Page</h1>
+
+            <div class="show_book" >
+                <img src="{{book_imageurl}}" class="card-img-top1" alt="Img">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">책 제목 : {{book_title}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">책 번호 : {{ book_num }} / 작성자 : {{book_nick}} / 작성일 {{book_time}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">별점 : {{ book_score }}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">책 내용 : {{book_content | safe}}
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                      <a href="/" class="btn btn-warning mybtn">Home</a>
+                      <a href="/edit/{{book_num}}" class="btn btn-warning mybtn" id="id-edit">Edit</a>
+                      <a href="/delete/{{book_num}}" class="btn btn-warning mybtn" id="id-delete">Delete</a>
+            </div>
+
+            </div>
+
+        </div>
+        </body>
+        </html>

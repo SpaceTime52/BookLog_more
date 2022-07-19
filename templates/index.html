@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome CSS -->
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <title>BookLog</title>
+
+    <!-- Local CSS & JS import -->
+    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
+    <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
+    <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+
+        let title = $(document).attr('title');
+        render_nav('{{ nickname }}', title);
+
+        listing();
+        hidebtn();
+
+        addNickname();
+      });
+
+      let id_value = document.cookie.slice(8);
+
+      function filter() {
+        var value, name, item, i;
+
+        value = document.getElementById("value").value.toUpperCase();
+        item = document.getElementsByClassName("item");
+
+        for (i = 0; i < item.length; i++) {
+          name = item[i].getElementsByClassName("name");
+          if (name[0].innerHTML.toUpperCase().indexOf(value) > -1) {
+            item[i].style.display = "";
+          } else {
+            let colelements = item[i].parentElement.parentElement.parentElement;
+            colelements.style.display = "none";
+          }
+        }
+      }
+
+      function enterkey() {
+        if (window.event.keyCode == 13) {
+          filter();
+        }
+      }
+
+      function addnick() {
+        $.ajax(
+          {
+              type: "POST",
+              url: "/index/addnick",
+              data: {
+              },
+              success: function(nick) {
+                $("#nickname").text(nick["nick"])
+              },
+        });
+      }
+
+      function cantclick() {
+        if (document.cookie == "") {
+          alert("로그인을 해주세요.")
+        }else {
+          window.location.href = '/edit-page'
+        }
+      }
+
+      function listing() {
+        $.ajax({
+          type: "GET",
+          url: "/review_test",
+          data: {},
+          success: function (response) {
+            let rows = response["books"];
+            //console.log(rows);
+            for (let i = 0; i < rows.length; i++) {
+              let content = rows[i]["content"];
+              let file = rows[i]["file"];
+              let title = rows[i]["title"].split('(')[0];
+              let time = rows[i]["time"];
+              let number = rows[i]["content_no"];
+              let nickname = rows[i]["writer_nickname"];
+              let star = rows[i]["star_score"];
+              let star_img = "⭐️".repeat(star);
+
+              let temp_html = `<div class="col">
+                                  <a href="/detail/${number}" onclick="passdata()">
+                                    <div class="card">
+                                      <img
+                                        src="${file}"
+                                        class="card-img-top"
+                                        alt="${title}"
+                                      />
+                                      <div class="card-body item">
+                                        <span><h5 class="card-title name">${title}</h5></span>
+                                        <div class="nickstar">
+                                          <p>${nickname}</p>
+                                          <p class="star_img">${star_img}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </a>
+                                </div>`;
+              $("#books_container").append(temp_html);
+            }
+          },
+        });
+      }
+
+
+    </script>
+  </head>
+
+  <body>
+
+    <header id="header_above"></header>
+    <div class="searchbox mt-2">
+      <div class="header">
+        <div class="input-group searchbox">
+          <input
+            type="text"
+            id="value"
+            class="form-control"
+            placeholder="Type to Search"
+            aria-label="Recipient's username with two button addons"
+            onkeyup="enterkey()"
+          />
+          <button
+            class="btn btn-outline-secondary filterbtn"
+            type="button"
+            onclick="filter()"
+          >
+            <i class="fa fa-search bodybtn" aria-hidden="true"></i>
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            onclick="window.location.reload()"
+          >
+            <i class="fa fa-home bodybtn" aria-hidden="true"></i>
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            onclick="cantclick()"
+          >
+            글작성
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="body container">
+      <!-- <p>검색</p> -->
+      <div id="books_container" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"></div>
+    </div>
+  </body>
+</html>
