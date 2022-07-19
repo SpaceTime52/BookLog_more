@@ -2,51 +2,47 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
+    <title>BookLog</title>
+
+    <!-- Bootstrap & FontAwsome -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
     <link
       href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       rel="stylesheet"
-    />
-
-    <!-- Font Awesome CSS -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
     />
 
     <!-- JQuery를 import 합니다 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-    <title>BookLog</title>
 
     <!-- Local CSS & JS import -->
     <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
     <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
+    <link rel="stylesheet" href="{{ url_for("static", filename="slick.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="animate.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="style_2nd.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
     <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
 
     <script type="text/javascript">
       $(document).ready(function () {
 
         let title = $(document).attr('title');
+
         render_nav('{{ nickname }}', title);
-
         listing();
-        hidebtn();
-
         addNickname();
+
       });
 
       let id_value = document.cookie.slice(8);
@@ -96,13 +92,15 @@
       }
 
       function listing() {
+        // document.ready에 요청
         $.ajax({
           type: "GET",
           url: "/review_test",
           data: {},
           success: function (response) {
+
             let rows = response["books"];
-            //console.log(rows);
+
             for (let i = 0; i < rows.length; i++) {
               let content = rows[i]["content"];
               let file = rows[i]["file"];
@@ -113,24 +111,22 @@
               let star = rows[i]["star_score"];
               let star_img = "⭐️".repeat(star);
 
-              let temp_html = `<div class="col">
-                                  <a href="/detail/${number}" onclick="passdata()">
-                                    <div class="card">
-                                      <img
-                                        src="${file}"
-                                        class="card-img-top"
-                                        alt="${title}"
-                                      />
-                                      <div class="card-body item">
-                                        <span><h5 class="card-title name">${title}</h5></span>
-                                        <div class="nickstar">
-                                          <p>${nickname}</p>
-                                          <p class="star_img">${star_img}</p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </a>
-                                </div>`;
+              let temp_html = `
+                                <!-- post of the page -->
+                                <article class="post wow fadeInLeft" data-wow-delay="0.6s">
+                                  <a href="/detail/${number}">
+                                  <div class="img-holder"><a href="/detail/${number}"><img src="${file}" alt="${title}"></a></div>
+                                  <div class="text-wrap">
+                                    <h5><a href="/detail/${number}" >${title}</a></h5>
+                                    <p>${star_img}</p>
+                                    <a href="/detail/${number}" class="link-more">${nickname}</a>
+                                  </div>
+                                </article>
+                                </a>
+                                <!-- post of the page end -->
+                                `;
+
+              // books_container div 안에 뿌려줌
               $("#books_container").append(temp_html);
             }
           },
@@ -143,45 +139,163 @@
 
   <body>
 
-    <header id="header_above"></header>
-    <div class="searchbox mt-2">
-      <div class="header">
-        <div class="input-group searchbox">
-          <input
-            type="text"
-            id="value"
-            class="form-control"
-            placeholder="Type to Search"
-            aria-label="Recipient's username with two button addons"
-            onkeyup="enterkey()"
-          />
-          <button
-            class="btn btn-outline-secondary filterbtn"
-            type="button"
-            onclick="filter()"
-          >
-            <i class="fa fa-search bodybtn" aria-hidden="true"></i>
-          </button>
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            onclick="window.location.reload()"
-          >
-            <i class="fa fa-home bodybtn" aria-hidden="true"></i>
-          </button>
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            onclick="cantclick()"
-          >
-            글작성
-          </button>
+    <!-- main container of all the page elements -->
+    <div id="wrapper">
+
+      <!-- main of the page -->
+      <main id="main" role="main">
+        <div class="home-box">
+          <section class="slideshow">
+            <!-- slide of the page -->
+            <div class="slide" style="background-image: url(https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80);">
+              <div class="align-holder">
+                <div class="align">
+                  <div class="container">
+                    <div class="row">
+                        <strong class="title">Lifestyle</strong>
+                        <h1>Life is an adventure, <br>it’s not a package tour.</h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- slide of the page end -->
+          </section>
         </div>
-      </div>
+        <!-- twocolumns of the page -->
+        <div id="twocolumns">
+          <div class="container">
+            <div class="row">
+              <!-- Content of the page -->
+              <div id="content" class="col-xs-12 col-md-9">
+                <!-- cols holder of the page -->
+                <div class="cols-holder" id="books_container">
+                </div>
+              </div>
+              <!-- Content of the page end -->
+              <!-- Sidebar of the page -->
+              <aside id="sidebar" class="col-xs-12 col-md-3">
+                <!-- Widget of the page -->
+                <section class="widget recent-posts-widget wow fadeInUp" data-wow-delay="0.6s">
+                  <header class="widget-head">
+                    <h3>Recent Posts</h3>
+                    <p>post those are very recent in Dot</p>
+                  </header>
+                  <ol>
+                    <li>
+                      <h4><a href="single-post.html">I get up in the morning looking <br>for an adventure.</a></h4>
+                      <span class="post-tag">
+                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
+                        <strong class="tag hot">HOT</strong>
+                      </span>
+                    </li>
+                    <li>
+                      <h4><a href="single-post.html">Letter from the desk of an <br>unsuccessful designer.</a></h4>
+                      <span class="post-tag">
+                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
+                        <strong class="tag">trending</strong>
+                      </span>
+                    </li>
+                    <li>
+                      <h4><a href="single-post.html">Exploring the unknow truth about myself - My Story.</a></h4>
+                      <span class="post-tag">
+                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
+                      </span>
+                    </li>
+                  </ol>
+                </section>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 새 책 소식 담기 -->
+                <!-- Widget of the page end -->
+                <!-- Searchbox for the Books -->
+                <div class="searchbox mb-3 mx-0">
+                  <div class="header">
+                    <div class="input-group searchbox">
+                      <input
+                        type="text"
+                        id="value"
+                        class="form-control"
+                        placeholder="Type to Search"
+                        aria-label="Recipient's username with two button addons"
+                        onkeyup="enterkey()"
+                      />
+                      <button
+                        class="btn btn-outline-secondary filterbtn"
+                        type="button"
+                        onclick="filter()"
+                      >
+                        <i class="fa fa-search bodybtn" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        onclick="window.location.reload()"
+                      >
+                        <i class="fa fa-home bodybtn" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        onclick="cantclick()"
+                      >
+                        글작성
+                      </button>
+                    </div>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 검색기능 개선 필요 -->
+                  </div>
+                </div>
+                <!-- Searchbox for the Books end-->
+                <!-- Widget of the page -->
+                <div class="widget widget_categories tabs wow fadeInUp" data-wow-delay="0.6s">
+                  <header class="widget-head">
+                    <h3>Category</h3>
+                    <p>browse all your favourite categories</p>
+                  </header>
+                  <div class="lists-holder">
+                    <ul>
+                      <li class="cat-item cat-item-1"><a href="#">Lifestyle </a> (23)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Movie </a> (02)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Travel </a> (11)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Sports </a> (05)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Music </a> (01)</li>
+                    </ul>
+                    <ul>
+                      <li class="cat-item cat-item-1"><a href="#">Education </a> (15)</li>
+                      <li class="cat-item cat-item-1"><a href="#">International </a> (09)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Design </a> (26)</li>
+                      <li class="cat-item cat-item-1"><a href="#">News </a> (01)</li>
+                      <li class="cat-item cat-item-1"><a href="#">Review </a> (14)</li>
+                    </ul>
+                  </div>
+                </div>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 카테고리 카운트 & 검색 기능에 추가 -->
+
+
+                <!-- Widget of the page end -->
+              </aside>
+              <!-- Sidebar of the page end -->
+            </div>
+          </div>
+        </div>
+      </main>
+      <!-- main of the page end -->
+      <!-- footer of the page -->
+      <footer id="footer" class="wow fadeInUp" data-wow-delay="0.4s">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              <p>&copy; 2022 Copyright 2016, <a href="home.html">Dot</a>. All Rights Reserved</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- footer of the page end -->
+      <!-- Back Top of the page -->
+      <span id="back-top" class="fa fa-angle-up"></span>
+
     </div>
-    <div class="body container">
-      <!-- <p>검색</p> -->
-      <div id="books_container" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4"></div>
-    </div>
+    
+
   </body>
 </html>
+
+<!--
+<script src="{{ url_for("static", filename="jquery.js") }}"></script>
+<script src="{{ url_for("static", filename="plugins.js") }}"></script>
+<script src="{{ url_for("static", filename="jquery.main.js") }}"></script>  -->
