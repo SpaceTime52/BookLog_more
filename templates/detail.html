@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <!-- Bulma CSS -->
+    <meta charset="utf-8" />
+    <title>북로그 자세히 보기</title>
+
+    <!-- Bootstrap & FontAwsome -->
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
     />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+    ></script>
+    <script src="https://kit.fontawesome.com/8e7edfdec4.js" crossorigin="anonymous"></script>
+  
+    <!-- JQuery를 import 합니다 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
-
-    <title>BookLog Detail Page</title>
 
     <!-- Local CSS & JS import -->
     <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
     <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
+    <link rel="stylesheet" href="{{ url_for("static", filename="slick.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="animate.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="style_2nd.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
+    <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
     <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
+  
 
     <style>
 {#        * {
@@ -49,37 +55,43 @@
         }
 
     </style>
+
     <script>
 
         $(document).ready(function () {
             let title = $(document).attr('title');
             render_nav('{{ nickname }}', title);
-            show_detail();
+            // show_detail();
+
+            let stars = "⭐️".repeat('{{book_score}}');
+            document.getElementById('stars').innerHTML = stars;
+
             addNickname();
             hidebtn();
             is_login_state();
         });
 
-            function show_detail() {
-                $.ajax({
-                    type: 'GET',
-                    url: '/detail/reviewData',
-                    data: {},
-                    success: function (response) {
+        /* function show_detail() {
+            $.ajax({
+                type: 'GET',
+                url: '/detail/reviewData',
+                data: {},
+                success: function (response) {
 
-                        let rows = response['bookData']
-                        for (let i = 0; i< rows.length; i++ ){
-                            let title = rows[i]['title']
-                            let content = rows[i]['content']
-                            let file = rows[i]['file']
-                            let time = rows[i]['time']
-                            let content_no = rows[i]['content_no']
-                            console.log(content_no, title, content,time,file)
+                    let rows = response['bookData']
+                    for (let i = 0; i< rows.length; i++ ){
+                        let title = rows[i]['title'].split('(')[0]
+                        let subtitle = rows[i]['title'].split('(')[1].split(')')[0]
+                        let content = rows[i]['content']
+                        let file = rows[i]['file']
+                        let time = rows[i]['time']
+                        let content_no = rows[i]['content_no']
+                        console.log(content_no, title, content,time,file)
 
-                        }
                     }
-                });
-            }
+                }
+            });
+        } */ 
 
         function is_login_state () {
 
@@ -103,44 +115,157 @@
     </script>
 </head>
     <body>
-        <header id="header_above"></header>
 
-        <div class="mask"></div>
-        <div class="detail">
-            <h1>BookLog Detail Page</h1>
+        <!-- main container of all the page elements -->
+    <div id="wrapper">
+        <!-- main of the page -->
+        <div class="w1">
+        <main id="main" role="main">
+          <!-- twocolumns of the page -->
+          <div id="twocolumns">
+            <div class="container">
+                <div class="container">
+                    <div class="row">
+                      <!-- Content of 리뷰 -->
+                      <article id="content" class="col-xs-12 col-md-8">
+                        <!-- Page Head of the page -->
+                        <header
+                          class="page-head wow fadeInUp"
+                          data-wow-delay="0.6s"
+                          style="
+                            background-image: url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1673&q=80);
+                            background-size: cover;
+                            filter: grayscale(100%);
+                          "
+                        ></header>
+                        <!-- Page Head of the page end -->
+                        <!-- Post Block of the page -->
+                        <div
+                          class="post-block single-post wow fadeInUp"
+                          data-wow-delay="0.6s"
+                        >
+                          <div class="post-holder">
+                            <time><a href="#" style="text-decoration: none;"> 작성자 :{{book_nick}}</a></time>
+                            <h2>{{book_title.split('(')[0]}} 북리뷰</h2>
+                            <p>
+                                {{book_content | safe}}
+                            </p>
+                            <span class=" px-2"
+                                >별점 : <span id='stars' class = 'px-1'></span> </span
+                            >
+                            <span class=" px-2"
+                                > 작성일 : {{book_time}}</span
+                            >
+                            
+                            <footer>
+                              <strong class="text"><a href="/" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
+                              <strong class="text"><a href="/edit/{{book_num}}" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
+                              <strong class="text"><a href="/delete/{{book_num}}" id="id-edit"style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
+                            </footer>
 
-            <div class="show_book" >
-                <img src="{{book_imageurl}}" class="card-img-top1" alt="Img">
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">책 제목 : {{book_title}}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">책 번호 : {{ book_num }} / 작성자 : {{book_nick}} / 작성일 {{book_time}}</th>
-                        </tr>
-                        <tr>
-                            <th scope="row">별점 : {{ book_score }}</th>
-                        </tr>
-                        <tr>
-                            <th scope="row">책 내용 : {{book_content | safe}}
-                            </th>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                          </div>
+                        </div>
+                        <!-- Post Block of the page end -->
+                      </article>
+                      <!-- Content of 리뷰 end -->
+                      <!-- Sidebar of 책정보 -->
+                      <aside id="sidebar" class="col-xs-12 col-md-4">
+                        <!-- 책 사진  -->
+                        <div
+                          class="widget promo-widget wow fadeInUp"
+                          data-wow-delay="0.6s"
+                        >
+                          <a href="#"
+                            ><img
+                              class="p-4"
+                              src="{{book_imageurl}}"
+                              alt="“Place your Advertisement here”"
+                          /></a>
+                        </div>
+                        <!-- 책 사진  end -->
+        
+                        <!-- Widget of the page -->
+                        <div
+                          class="widget widget_categories version-ii wow fadeInUp"
+                          data-wow-delay="0.6s"
+                        >
+                          <header class="widget-head">
+                            <h3>{{book_title.split('(')[0]}}</h3>
+                            {% if book_title.split('(')[1] %}
+                            <span>{{book_title.split('(')[1].replace(')','')}}</span>
+                            {% endif %}
+                          </header>
+                          <ul>
+                            <li class="cat-item cat-item-1">
+                              <span><a href="#">저자</a></span
+                              ><span><a href="#">- Lifestyle</a></span>
+                            </li>
+                            <li class="cat-item cat-item-1">
+                              <span><a href="#">- Movie</a></span
+                              ><span><a href="#">- Movie</a></span>
+                            </li>
+                            <li class="cat-item cat-item-1">
+                              <span><a href="#">- Travel</a></span
+                              ><span><a href="#">- Travel</a></span>
+                            </li>
+                            <li class="cat-item cat-item-1">
+                              <span><a href="#">- Sports</a></span
+                              ><span><a href="#">- Sports</a></span>
+                            </li>
+                            <li class="cat-item cat-item-1">
+                              <span><a href="#">- Music</a></span
+                              ><span><a href="#">- Music</a></span>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- Widget of the page end -->
+                        <!-- 저자 정보 -->
+                        <div
+                          class="widget widget-block wow fadeInUp"
+                          data-wow-delay="0.6s"
+                        >
+                          <div class="alignleft"></div>
+                          <div class="text-holder">
+                            <header>
+                              <h2>
+                                <a href="#"><strong>저자 </strong>장병규</a>
+                              </h2>
+                            </header>
+                            <p>
+                              Duis autem vel eum iriure dolor in hendrerit in vulputate
+                              velit esse molestie consequat, vel illum dolore eu feugiat
+                              nulla facilisis at vero eros et accumsan et iusto odio
+                              dignissim qui blandit praesent.
+                            </p>
+                          </div>
+                        </div>
+                        <!-- 저자 정보 end -->
+                      </aside>
+                      <!-- Sidebar of 책정보 end -->
+                    </div>
+                  </div>
             </div>
-            <div style="display: flex; justify-content: center;">
-                      <a href="/" class="btn btn-warning mybtn">Home</a>
-                      <a href="/edit/{{book_num}}" class="btn btn-warning mybtn" id="id-edit">Edit</a>
-                      <a href="/delete/{{book_num}}" class="btn btn-warning mybtn" id="id-delete">Delete</a>
+          </div>
+        </main>
+    </div>
+        <!-- main of the page end -->
+  
+        <!-- footer of the page -->
+        <footer id="footer" class="wow fadeInUp" data-wow-delay="0.4s">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12">
+                <p>&copy; 2022 Copyright 2016, <a href="home.html">Dot</a>. All Rights Reserved</p>
+              </div>
             </div>
+          </div>
+        </footer>
+        <!-- footer of the page end -->
+        
+        <!-- Back Top of the page -->
+        <span id="back-top" class="fa fa-angle-up"></span>
+  
+      </div>
 
-            </div>
-
-        </div>
         </body>
         </html>

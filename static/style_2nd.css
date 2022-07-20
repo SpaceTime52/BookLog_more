@@ -281,8 +281,6 @@ h6 a,
   transition: all 0.3s ease-in-out;
 }
 
-.post-block time a,
-.post-block time a:before,
 .post-block .ico-play,
 .post-block img,
 .blocks-slider .slide {
@@ -3645,11 +3643,6 @@ aside.version-ii .subscribe-form .form-control:focus {
   right: 100%;
 }
 
-.post-block time a:before {
-  z-index: -1;
-  background: #2a2d34;
-}
-
 .post-block time a:hover,
 .post-block time a:focus,
 .post-block time a:active {
@@ -3685,7 +3678,7 @@ aside.version-ii .subscribe-form .form-control:focus {
   float: left;
   max-width: 49%;
   letter-spacing: -1px;
-  padding: 12px 8px 11px 29px;
+  padding: 12px 29px 12px 29px;
 }
 
 .post-block footer .text + .text {
@@ -3735,6 +3728,7 @@ aside.version-ii .subscribe-form .form-control:focus {
 }
 
 .post-block p {
+  font: 12px/2.3 sans-serif;
   margin: 0 0 15px;
 }
 

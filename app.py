@@ -60,10 +60,7 @@ def detail_bookdata(num):
     global a
     a = num
 
-
-
     book_list = list(review_db.review_test.find({"content_no": int(num)}, {'_id': False}))
-
 
     book_title = book_list[0]['title']
     book_content = book_list[0]['content']
