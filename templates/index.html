@@ -35,32 +35,42 @@
       $(document).ready(function () {
         render_nav();
         listing();
+
+        let searchInputTag = document.getElementById("bookReviewSearch");
+        
+        console.log(searchInputTag)
+
+        searchInputTag.addEventListener('input', (event) => {
+
+          let value = event.target.value
+          let item = document.getElementsByClassName("book-item");
+        
+          for (let i = 0 ; i < item.length ; i++) {
+            item[i].style.display = "inline-block";
+            if (!item[i].innerText.toLowerCase().includes(value)) {
+              item[i].style.display = "none";
+            }
+          }
+        });
       });
 
-      let id_value = document.cookie.slice(8);
+      // let id_value = document.cookie.slice(8);
 
       function filter() {
-        var value, name, item, i;
 
-        value = document.getElementById("value").value.toUpperCase();
-        item = document.getElementsByClassName("item");
-
-        for (i = 0; i < item.length; i++) {
-          name = item[i].getElementsByClassName("name");
-          if (name[0].innerHTML.toUpperCase().indexOf(value) > -1) {
-            item[i].style.display = "";
-          } else {
-            let colelements = item[i].parentElement.parentElement.parentElement;
-            colelements.style.display = "none";
+        let value = document.getElementById("bookReviewSearch").value.toLowerCase(); 
+        let item = document.getElementsByClassName("book-item");
+        
+        for (let i = 0 ; i < item.length ; i++) {
+          item[i].style.display = "inline-block";
+          if (!item[i].innerText.toLowerCase().includes(value)) {
+            item[i].style.display = "none";
           }
+
         }
+
       }
 
-      function enterkey() {
-        if (window.event.keyCode == 13) {
-          filter();
-        }
-      }
 
       function addnick() {
         $.ajax(
@@ -105,7 +115,7 @@
 
               let temp_html = `
                                 <!-- post of the page -->
-                                <article class="post wow fadeInLeft" data-wow-delay="0.6s">
+                                <div class="post wow fadeInLeft book-item" data-wow-delay="0.6s">
                                   <a href="/detail/${number}">
                                   <div class="img-holder"><a href="/detail/${number}"><img src="${file}" alt="${title}"></a></div>
                                   <div class="text-wrap">
@@ -113,7 +123,7 @@
                                     <p>${star_img}</p>
                                     <a href="/detail/${number}" class="link-more">${nickname}</a>
                                   </div>
-                                </article>
+                                </div
                                 </a>
                                 <!-- post of the page end -->
                                 `;
@@ -145,6 +155,19 @@
             <div class="row">
               <!-- Content of the page -->
               <div id="content" class="col-xs-12 col-md-9">
+                <!-- 검색기능 -->
+                <div class="widget widget_search hidden-sm hidden-xs wow fadeInUp" data-wow-delay="0.6s" >
+                  <form method="get" class="search-form" onsubmit="filter(); return false;">
+                      <input
+                        type="search"
+                        name="s"
+                        id="bookReviewSearch"
+                        placeholder="책 이름이나 닉네임, 카테고리를 검색해보세요"
+                      />
+                      <button type="button" class="p-0" onclick="filter()"><i class="fa-solid fa-magnifying-glass fa-sm"></i></button>
+                  </form>
+                </div>
+                <!-- 검색기능 end -->
                 <!-- cols holder of the page -->
                 <div class="cols-holder" id="books_container">
                 </div>
@@ -185,55 +208,6 @@
                   </ol>
                 </section>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 새 책 소식 담기 -->
                 <!-- 새 책 소개 from API ends -->
-                <!-- 검색기능 - 레거시 -->
-                <div class="searchbox mb-3 mx-0">
-                    <div class="input-group searchbox">
-                      <input
-                        type="text"
-                        id="value"
-                        class="form-control"
-                        placeholder="Type to Search"
-                        aria-label="Recipient's username with two button addons"
-                        onkeyup="enterkey()"
-                      />
-                      <button
-                        class="btn btn-outline-secondary filterbtn"
-                        type="button"
-                        onclick="filter()"
-                      >
-                        <i class="fa fa-search bodybtn" aria-hidden="true"></i>
-                      </button>
-                      <button
-                        class="btn btn-outline-secondary"
-                        type="button"
-                        onclick="window.location.reload()"
-                      >
-                        <i class="fa fa-home bodybtn" aria-hidden="true"></i>
-                      </button>
-                      <button
-                        class="btn btn-outline-secondary"
-                        type="button"
-                        onclick="cantclick()"
-                      >
-                        글작성
-                      </button>
-                    </div>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 검색기능 개선 필요 -->
-                </div>
-                <!-- 검색기능 - 레거시 end -->
-                <!-- 검색기능 - 신규 -->
-                <div class="widget widget_search hidden-sm hidden-xs wow fadeInUp" data-wow-delay="0.6s" >
-                  <form method="get" class="search-form" action="#">
-                    <fieldset>
-                      <input
-                        type="search"
-                        name="s"
-                        placeholder="Type to search here"
-                      />
-                      <button type="button" class="ico-search"></button>
-                    </fieldset>
-                  </form>
-                </div>
-                <!-- 검색기능 - 신규 end -->
                 <!-- 카테고리 카운트 + 눌렀을 때 검색 기능 -->
                 <div class="widget widget_categories tabs wow fadeInUp" data-wow-delay="0.6s">
                   <header class="widget-head">

@@ -44,7 +44,7 @@
         star_score_visualizer(parseInt('{{star_score}}'));
 
         if ( '{{isEdit}}' ) {
-          $("#naver_booksearch").empty();
+          $("#naver_booksearch").hide();
           $("#review_content").val(`{{content | safe}}`)
           $("#star_score").val("{{star_score}}")
         }
@@ -232,14 +232,15 @@
                   <article id="content" class="col-xs-12 col-md-8">
 
                     <!-- 네이버 API 책 검색  -->
-                    <div class="widget widget_search hidden-sm hidden-xs wow fadeInUp" data-wow-delay="0.6s" >
-                      <form method="get" class="search-form" id="naver_booksearch" onsubmit="console.log('a'); booksearch_listing(); open_modal(); return false;">
+                    <div class="widget widget_search hidden-sm hidden-xs wow fadeInUp" data-wow-delay="0.6s" id="naver_booksearch" >
+                      <form method="get" class="search-form" onsubmit="console.log('a'); booksearch_listing(); open_modal(); return false;">
                           <input
                             type="search"
                             id="booknameSearch"
                             placeholder="리뷰를 남길 도서를 검색하세요. (네이버 도서검색)"
                           />
-                          <button type="button" id="button-to-openmodal" onclick="booksearch_listing();" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-light fa-magnifying-glass"></i></button>
+                          <button type="button" class="p-0"id="button-to-openmodal" onclick="booksearch_listing();" data-bs-toggle="modal" data-bs-target="#exampleModal" ><i class="fa-solid fa-magnifying-glass fa-sm"></i></button>
+
                       </form>
                     </div>
                     <!-- 네이버 API 책 검색 end -->
