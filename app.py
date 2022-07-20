@@ -98,16 +98,18 @@ def login_state():
 # 작성페이지 @김보현
 @app.route('/edit-page')
 def edit_page():
-    token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    nickname = payload['nickname']
+    # token_receive = request.cookies.get('mytoken')
+    # payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    # nickname = payload['nickname']
 
-    return render_template("edit-page.html", nickname=nickname)
+    return render_template("edit-page.html")
+                            # , nickname=nickname)
 
 
 # 수정페이지 @김보현
 @app.route('/edit/<reviewNo>')
 def edit_review(reviewNo):
+    
     book_list = list(review_db.review_test.find({"content_no": int(reviewNo)}, {'_id': False}))
 
     title = book_list[0]['title']
@@ -141,8 +143,9 @@ def find_bookdetail_via_isbn(isbn):
 # 작성된 리뷰를 저장 @김보현
 @app.route('/save-review', methods=['POST'])
 def save_review():
+    
     all_reviews = list(review_db.review_test.find({}, {'_id': False}))
-
+    
     review_count = all_reviews[-1]['content_no'] + 1
 
     booktitle = request.form['booktitle_give']
@@ -214,8 +217,6 @@ def login():
 
 
 # 로그인  @금윤성
-
-
 @app.route('/login/sign_in', methods=['POST'])
 def sign_in():
     username_receive = request.form['username_give']

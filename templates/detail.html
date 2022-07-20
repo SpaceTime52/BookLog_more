@@ -30,31 +30,6 @@
     <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
     <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
     <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
-  
-
-    <style>
-{#        * {
-            color :  black;
-        }
-
-        body {
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ba10c5f1-e098-45fd-b145-1f7f79a2703e/KakaoTalk_Image_2022-07-14-16-16-40.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220714%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220714T071727Z&X-Amz-Expires=86400&X-Amz-Signature=f66e3e3714813440ef64d77af070921059937579372e7868ac73e1d2fe7faab8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22KakaoTalk_Image_2022-07-14-16-16-40.png%22&x-id=GetObject');
-            background-position: center;
-            background-size: cover;
-        }#}
-
-
-        .detail {
-            width: 500px;
-            margin: 60px auto 0px auto;
-            padding-bottom: 60px;
-        }
-
-        option {
-            color: black;
-        }
-
-    </style>
 
     <script>
 
@@ -70,28 +45,6 @@
             hidebtn();
             is_login_state();
         });
-
-        /* function show_detail() {
-            $.ajax({
-                type: 'GET',
-                url: '/detail/reviewData',
-                data: {},
-                success: function (response) {
-
-                    let rows = response['bookData']
-                    for (let i = 0; i< rows.length; i++ ){
-                        let title = rows[i]['title'].split('(')[0]
-                        let subtitle = rows[i]['title'].split('(')[1].split(')')[0]
-                        let content = rows[i]['content']
-                        let file = rows[i]['file']
-                        let time = rows[i]['time']
-                        let content_no = rows[i]['content_no']
-                        console.log(content_no, title, content,time,file)
-
-                    }
-                }
-            });
-        } */ 
 
         function is_login_state () {
 
@@ -116,7 +69,7 @@
 </head>
     <body>
 
-        <!-- main container of all the page elements -->
+    <!-- main container of all the page elements -->
     <div id="wrapper">
         <!-- main of the page -->
         <div class="w1">
@@ -124,148 +77,142 @@
           <!-- twocolumns of the page -->
           <div id="twocolumns">
             <div class="container">
-                <div class="container">
-                    <div class="row">
-                      <!-- Content of 리뷰 -->
-                      <article id="content" class="col-xs-12 col-md-8">
-                        <!-- Page Head of the page -->
-                        <header
-                          class="page-head wow fadeInUp"
-                          data-wow-delay="0.6s"
-                          style="
-                            background-image: url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1673&q=80);
-                            background-size: cover;
-                            filter: grayscale(100%);
-                          "
-                        ></header>
-                        <!-- Page Head of the page end -->
-                        <!-- Post Block of the page -->
-                        <div
-                          class="post-block single-post wow fadeInUp"
-                          data-wow-delay="0.6s"
+                <div class="row">
+                    <!-- Content of 리뷰 -->
+                    <article id="content" class="col-xs-12 col-md-8">
+                    <!-- Page Head of the page -->
+                    <header
+                        class="page-head wow fadeInUp"
+                        data-wow-delay="0.6s"
+                        style="
+                        background-image: url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1673&q=80);
+                        background-size: cover;
+                        filter: grayscale(100%);
+                        "
+                    ></header>
+                    <!-- Page Head of the page end -->
+                    <!-- Post Block of the page -->
+                    <div
+                        class="post-block single-post wow fadeInUp"
+                        data-wow-delay="0.6s"
+                    >
+                        <div class="post-holder">
+                        <time><a href="#" style="text-decoration: none;"> 작성자 :{{book_nick}}</a></time>
+                        <h2>{{book_title.split('(')[0]}} 북리뷰</h2>
+                        <p>
+                            {{book_content | safe}}
+                        </p>
+                        <span class=" px-2"
+                            >별점 : <span id='stars' class = 'px-1'></span> </span
                         >
-                          <div class="post-holder">
-                            <time><a href="#" style="text-decoration: none;"> 작성자 :{{book_nick}}</a></time>
-                            <h2>{{book_title.split('(')[0]}} 북리뷰</h2>
-                            <p>
-                                {{book_content | safe}}
-                            </p>
-                            <span class=" px-2"
-                                >별점 : <span id='stars' class = 'px-1'></span> </span
-                            >
-                            <span class=" px-2"
-                                > 작성일 : {{book_time}}</span
-                            >
-                            
-                            <footer>
-                              <strong class="text"><a href="/" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
-                              <strong class="text"><a href="/edit/{{book_num}}" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
-                              <strong class="text"><a href="/delete/{{book_num}}" id="id-edit"style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
-                            </footer>
+                        <span class=" px-2"
+                            > 작성일 : {{book_time}}</span
+                        >
+                        
+                        <footer>
+                            <strong class="text"><a href="/" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
+                            <strong class="text"><a href="/edit/{{book_num}}" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
+                            <strong class="text"><a href="/delete/{{book_num}}" id="id-edit"style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
+                        </footer>
 
-                          </div>
                         </div>
-                        <!-- Post Block of the page end -->
-                      </article>
-                      <!-- Content of 리뷰 end -->
-                      <!-- Sidebar of 책정보 -->
-                      <aside id="sidebar" class="col-xs-12 col-md-4">
-                        <!-- 책 사진  -->
-                        <div
-                          class="widget promo-widget wow fadeInUp"
-                          data-wow-delay="0.6s"
-                        >
-                          <a href="#"
-                            ><img
-                              class="p-4"
-                              src="{{book_imageurl}}"
-                              alt="“Place your Advertisement here”"
-                          /></a>
-                        </div>
-                        <!-- 책 사진  end -->
-        
-                        <!-- Widget of the page -->
-                        <div
-                          class="widget widget_categories version-ii wow fadeInUp"
-                          data-wow-delay="0.6s"
-                        >
-                          <header class="widget-head">
-                            <h3>{{book_title.split('(')[0]}}</h3>
-                            {% if book_title.split('(')[1] %}
-                            <span>{{book_title.split('(')[1].replace(')','')}}</span>
-                            {% endif %}
-                          </header>
-                          <ul>
-                            <li class="cat-item cat-item-1">
-                              <span><a href="#">저자</a></span
-                              ><span><a href="#">- Lifestyle</a></span>
-                            </li>
-                            <li class="cat-item cat-item-1">
-                              <span><a href="#">- Movie</a></span
-                              ><span><a href="#">- Movie</a></span>
-                            </li>
-                            <li class="cat-item cat-item-1">
-                              <span><a href="#">- Travel</a></span
-                              ><span><a href="#">- Travel</a></span>
-                            </li>
-                            <li class="cat-item cat-item-1">
-                              <span><a href="#">- Sports</a></span
-                              ><span><a href="#">- Sports</a></span>
-                            </li>
-                            <li class="cat-item cat-item-1">
-                              <span><a href="#">- Music</a></span
-                              ><span><a href="#">- Music</a></span>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- Widget of the page end -->
-                        <!-- 저자 정보 -->
-                        <div
-                          class="widget widget-block wow fadeInUp"
-                          data-wow-delay="0.6s"
-                        >
-                          <div class="alignleft"></div>
-                          <div class="text-holder">
-                            <header>
-                              <h2>
-                                <a href="#"><strong>저자 </strong>장병규</a>
-                              </h2>
-                            </header>
-                            <p>
-                              Duis autem vel eum iriure dolor in hendrerit in vulputate
-                              velit esse molestie consequat, vel illum dolore eu feugiat
-                              nulla facilisis at vero eros et accumsan et iusto odio
-                              dignissim qui blandit praesent.
-                            </p>
-                          </div>
-                        </div>
-                        <!-- 저자 정보 end -->
-                      </aside>
-                      <!-- Sidebar of 책정보 end -->
                     </div>
-                  </div>
+                    <!-- Post Block of the page end -->
+                    </article>
+                    <!-- Content of 리뷰 end -->
+                    <!-- Sidebar of 책정보 -->
+                    <aside id="sidebar" class="col-xs-12 col-md-4">
+                    <!-- 책 사진  -->
+                    <div
+                        class="widget promo-widget wow fadeInUp"
+                        data-wow-delay="0.6s"
+                    >
+                        <a href="#"
+                        ><img
+                            class="p-4"
+                            src="{{book_imageurl}}"
+                            alt="{{book_title.split('(')[0]}} book cover"
+                        /></a>
+                    </div>
+                    <!-- 책 사진  end -->
+    
+                    <!-- Widget of the page -->
+                    <div
+                        class="widget widget_categories version-ii wow fadeInUp"
+                        data-wow-delay="0.6s"
+                    >
+                        <header class="widget-head">
+                        <h3>{{book_title.split('(')[0]}}</h3>
+                        {% if book_title.split('(')[1] %}
+                        <span>{{book_title.split('(')[1].replace(')','')}}</span>
+                        {% endif %}
+                        </header>
+                        <ul>
+                        <li class="cat-item cat-item-1">
+                            <span><a href="#">저자</a></span
+                            ><span><a href="#">- Lifestyle</a></span>
+                        </li>
+                        <li class="cat-item cat-item-1">
+                            <span><a href="#">- Movie</a></span
+                            ><span><a href="#">- Movie</a></span>
+                        </li>
+                        <li class="cat-item cat-item-1">
+                            <span><a href="#">- Travel</a></span
+                            ><span><a href="#">- Travel</a></span>
+                        </li>
+                        <li class="cat-item cat-item-1">
+                            <span><a href="#">- Sports</a></span
+                            ><span><a href="#">- Sports</a></span>
+                        </li>
+                        <li class="cat-item cat-item-1">
+                            <span><a href="#">- Music</a></span
+                            ><span><a href="#">- Music</a></span>
+                        </li>
+                        </ul>
+                    </div>
+                    <!-- Widget of the page end -->
+                    <!-- 저자 정보 -->
+                    <div
+                        class="widget widget-block wow fadeInUp"
+                        data-wow-delay="0.6s"
+                    >
+                        <div class="alignleft"></div>
+                        <div class="text-holder">
+                        <header>
+                            <h2>
+                            <a href="#"><strong>저자 </strong>장병규</a>
+                            </h2>
+                        </header>
+                        <p>
+                            Duis autem vel eum iriure dolor in hendrerit in vulputate
+                            velit esse molestie consequat, vel illum dolore eu feugiat
+                            nulla facilisis at vero eros et accumsan et iusto odio
+                            dignissim qui blandit praesent.
+                        </p>
+                        </div>
+                    </div>
+                    <!-- 저자 정보 end -->
+                    </aside>
+                    <!-- Sidebar of 책정보 end -->
+                </div>
             </div>
           </div>
         </main>
-    </div>
         <!-- main of the page end -->
-  
+
         <!-- footer of the page -->
         <footer id="footer" class="wow fadeInUp" data-wow-delay="0.4s">
-          <div class="container">
+            <div class="container">
             <div class="row">
-              <div class="col-xs-12">
-                <p>&copy; 2022 Copyright 2016, <a href="home.html">Dot</a>. All Rights Reserved</p>
-              </div>
+                <div class="col-xs-12">
+                <p>&copy; 2022 Copyright <a href="home.html"> SpaceTime </a>. All Rights Reserved</p>
+                </div>
             </div>
-          </div>
+            </div>
         </footer>
         <!-- footer of the page end -->
-        
-        <!-- Back Top of the page -->
-        <span id="back-top" class="fa fa-angle-up"></span>
-  
-      </div>
-
-        </body>
-        </html>
+    </div>
+    
+    
+</body>
+</html>

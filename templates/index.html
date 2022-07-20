@@ -34,13 +34,8 @@
 
     <script type="text/javascript">
       $(document).ready(function () {
-
         let title = $(document).attr('title');
-
-        render_nav('{{ nickname }}', title);
         listing();
-        addNickname();
-
       });
 
       let id_value = document.cookie.slice(8);
@@ -290,23 +285,15 @@
         <div class="container">
           <div class="row">
             <div class="col-xs-12">
-              <p>&copy; 2022 Copyright 2016, <a href="home.html">Dot</a>. All Rights Reserved</p>
+              <p>&copy; 2022 Copyright <a href="home.html">SpaceTime</a>. All Rights Reserved</p>
             </div>
           </div>
         </div>
       </footer>
       <!-- footer of the page end -->
 
-      <!-- Back Top of the page -->
-      <span id="back-top" class="fa fa-angle-up"></span>
-
     </div>
-    
 
   </body>
-</html>
 
-<!--
-<script src="{{ url_for("static", filename="jquery.js") }}"></script>
-<script src="{{ url_for("static", filename="plugins.js") }}"></script>
-<script src="{{ url_for("static", filename="jquery.main.js") }}"></script>  -->
+</html>

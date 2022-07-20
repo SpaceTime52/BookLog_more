@@ -748,20 +748,14 @@ img.aligncenter {
 }
 
 @font-face {
-  font-family: "icomoon";
-  src: url("fonts/icomoon.eot?16nlle");
-  src: url("fonts/icomoon.eot?16nlle#iefix") format("embedded-opentype"),
-    url("fonts/icomoon.ttf?16nlle") format("truetype"),
-    url("fonts/icomoon.woff?16nlle") format("woff"),
-    url("fonts/icomoon.svg?16nlle#icomoon") format("svg");
+  font-family: "Roboto", sans-serif;
+  src: url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="ico-"],
 [class*=" ico-"] {
-  font-family: "icomoon" !important;
-  speak: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
