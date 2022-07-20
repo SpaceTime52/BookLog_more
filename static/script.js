@@ -1,4 +1,38 @@
-﻿// (function (factory) {
+﻿function render_nav() {
+  let nav_html = `
+                  <header id="header" class="version-ii">
+                    <div class="stick-holder">
+                    <div class="container">
+                        <div class="row holder">
+                          <div class="col-xs-3 col-sm-2">
+                              <!-- Logo of the page -->
+                              <div class="logo">
+                              <a href="/" style='text-decoration:none;'
+                                  ><i class="fa-solid fa-book fa-2xl" style='color: #333;'></i></a>
+                              </div>
+                              <!-- Logo of the page end -->
+                          </div>
+                          <div class="col-xs-9 col-sm-10 nav-holder">
+
+                              <!-- Nav of the page -->
+                              <nav id="nav" class="navbar navbar-default">
+
+                              </nav>
+                              <!-- Nav of the page -->
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+                    <section class="widget profile-widget p-5" id="head-section">
+                    <h2>단 한 권의 책만 <br>읽은 사람을 경계하라</h2>
+                    <p class='m-0'> 책을 접할 때에도 다양한 관점을 가지는 게 좋습니다. 서로 읽은 책을 공유하면서 인사이트를 나누어요.<br>/이 페이지는 팀프로젝트로 제작되었습니다./</p>
+                    </section>
+                </header> `;
+
+  $("#header-slot").append(nav_html);
+}
+
+// (function (factory) {
 //   if (typeof define === "function" && define.amd) {
 //     define(["jquery"], factory);
 //   } else if (typeof exports === "object") {

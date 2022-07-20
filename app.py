@@ -30,7 +30,7 @@ db = client.spart_week1
 review_client = MongoClient('mongodb+srv://test:sparta@cluster0.plrlvlp.mongodb.net/?retryWrites=true&w=majority')
 review_db = review_client.spart_week1
 
-a = 3
+
 # 메인페이지 @문동환
 @app.route('/')
 def main():
@@ -57,9 +57,6 @@ def detail_data():
 @app.route('/detail/<num>')
 def detail_bookdata(num):
 
-    global a
-    a = num
-
     book_list = list(review_db.review_test.find({"content_no": int(num)}, {'_id': False}))
 
     book_title = book_list[0]['title']
@@ -79,7 +76,6 @@ def detail_bookdata(num):
 
 @app.route('/detail/login', methods=['POST'])
 def login_state():
-    global a
 
     user = list(review_db.review_test.find({"content_no": int(a)}, {'_id': False}))
 
@@ -144,6 +140,7 @@ def find_bookdetail_via_isbn(isbn):
 @app.route('/save-review', methods=['POST'])
 def save_review():
     
+    print('함수 진입')
     all_reviews = list(review_db.review_test.find({}, {'_id': False}))
     
     review_count = all_reviews[-1]['content_no'] + 1

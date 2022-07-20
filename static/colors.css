@@ -1,6 +1,7 @@
 #nav .btn:hover,
 #nav .btn:focus,
 #nav .btn:active,
+button .widget,
 .widget::before,
 .widget.widget_search button,
 .widget.recent-posts-widget .tab-head a.active,
@@ -35,7 +36,8 @@
 .masonry-blocks time strong::after,
 #nav .drop a:hover:after,
 .side-nav h2 {
-  background-color: #f5ab35; }
+  background-color: #f5ab35;
+}
 
 #back-top,
 #header .social-networks a:hover,
@@ -139,7 +141,8 @@ h6 a:focus,
 .video-holder .ico-play:active,
 .video-holder .ico-play:focus,
 .page-error .comming-timer .countdown-amount {
-  color: #f5ab35; }
+  color: #f5ab35;
+}
 
 .widget .social-networks.justify li.active a,
 .widget ul.social-networks.justify li.active a,
@@ -159,10 +162,13 @@ h6 a:focus,
 .slideshow .header a::after,
 .switcher,
 #nav .navbar-toggle {
-  border-color: #f5ab35; }
+  border-color: #f5ab35;
+}
 
 .side-nav h2:before {
-  border-top-color: #f5ab35; }
+  border-top-color: #f5ab35;
+}
 
 .masonry-blocks blockquote:after {
-  background: rgba(245, 171, 53, 0.8); }
+  background: rgba(245, 171, 53, 0.8);
+}

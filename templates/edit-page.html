@@ -29,6 +29,7 @@
     <link rel="stylesheet"  href="{{ url_for("static", filename="style_2nd.css") }}">
     <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
     <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
+
     <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
 
     <!-- include summernote css/js -->
@@ -39,9 +40,7 @@
 
       $(document).ready(function () {
 
-        let title = $(document).attr('title');
-        // render_nav('{{ nickname }}', title);
-
+        render_nav();
         star_score_visualizer(parseInt('{{star_score}}'));
 
         if ( '{{isEdit}}' ) {
@@ -106,10 +105,10 @@
       function posting() {
 
         // 포스팅할 데이터 취합
-        let booktitle = $("#booktitle").val().trim()
+        let booktitle = $("#booktitle").val().trim();
         let review_content = $("#review_content").val();
-        let img_url = $("#image_url")[0]['src'].split('?')[0].trim();
-        let writer = $("#nickname").text().split(' ')[0]
+        let img_url = '{{image}}'.split('?')[0];
+        // let writer = $("#nickname").text().split(' ')[0]
         let star_score = parseInt($("#star_score").val());
 
         // FormData 객체에 담아, 전송 준비
@@ -118,7 +117,7 @@
         form_data.append("imgfile_give", img_url);
         form_data.append("booktitle_give", booktitle);
         form_data.append("review_content_give",review_content);
-        form_data.append("writer_nickname", writer);
+        form_data.append("writer_nickname", '김보현');
         form_data.append("star_score", star_score);
 
         // ajax : POST 방식으로 save-review 주소에 전송 (python에서 처리한 후 response 보내면, msg 찾아 alert)
@@ -158,6 +157,7 @@
               alert('등록이 완료되었습니다.')
               window.location.href = '/';
             },
+
           });
 
         }
@@ -204,11 +204,20 @@
 
       }
 
+      function open_modal(){
+          event.preventDefault();
+          $("#exampleModal").modal('show');
+      }
+
     </script>
 
   </head>
 
   <body>
+          
+        <!-- 공통 header -->
+        <div id="header-slot"></div>
+        <!--공통 header end -->
 
         <!-- main container of all the page elements -->
         <div id="wrapper">
@@ -221,21 +230,10 @@
                 <div class="row">
                   <!-- Content of 리뷰 -->
                   <article id="content" class="col-xs-12 col-md-8">
-                    <!-- Page Head of the page -->
-                    <header
-                      class="page-head wow fadeInUp"
-                      data-wow-delay="0.6s"
-                      style="
-                        background-image: url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1673&q=80);
-                        background-size: cover;
-                        filter: grayscale(100%);
-                      "
-                    ></header>
-                    <!-- Page Head of the page end -->
 
                     <!-- 네이버 API 책 검색  -->
                     <div class="widget widget_search hidden-sm hidden-xs wow fadeInUp" data-wow-delay="0.6s" >
-                      <form method="get" class="search-form" id="naver_booksearch" action="#">
+                      <form method="get" class="search-form" id="naver_booksearch" onsubmit="console.log('a'); booksearch_listing(); open_modal(); return false;">
                           <input
                             type="search"
                             id="booknameSearch"
@@ -290,8 +288,8 @@
                           </div>
                         
                         <footer>
+                          <strong class="text"><a href="javascript:posting();" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>작성 완료</a></strong>
                           <strong class="text"><a href="/" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
-                          <strong class="text"><a href="/save-review" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>작성 완료</a></strong>
                         </footer>
 
                       </div>
@@ -309,6 +307,7 @@
                         {% if image %}
                         <img
                           class="p-4"
+                          id ='image_url'
                           src="{{image.split('?')[0]}}" 
                         />
                         {% endif %}

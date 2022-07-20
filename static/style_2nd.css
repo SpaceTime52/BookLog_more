@@ -6127,3 +6127,7 @@ aside.version-ii .subscribe-form .form-control:focus {
     transform: rotate(360deg);
   }
 }
+
+header .row {
+  margin-top: 0px;
+}

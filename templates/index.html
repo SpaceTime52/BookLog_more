@@ -18,7 +18,6 @@
   ></script>
   <script src="https://kit.fontawesome.com/8e7edfdec4.js" crossorigin="anonymous"></script>
 
-
     <!-- JQuery를 import 합니다 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -34,7 +33,7 @@
 
     <script type="text/javascript">
       $(document).ready(function () {
-        let title = $(document).attr('title');
+        render_nav();
         listing();
       });
 
@@ -128,32 +127,18 @@
 
 
     </script>
+
   </head>
 
   <body>
+    <!-- 공통 header -->
+    <div id="header-slot"></div>
+    <!--공통 header end -->
 
     <!-- main container of all the page elements -->
     <div id="wrapper">
       <!-- main of the page -->
       <main id="main" role="main">
-        <div class="home-box">
-          <section class="slideshow">
-            <!-- slide of the page -->
-            <div class="slide" style="background-image: url(https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80);">
-              <div class="align-holder">
-                <div class="align">
-                  <div class="container">
-                    <div class="row">
-                        <strong class="title">Lifestyle</strong>
-                        <h1>Life is an adventure, <br>it’s not a package tour.</h1>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- slide of the page end -->
-          </section>
-        </div>
         <!-- twocolumns of the page -->
         <div id="twocolumns">
           <div class="container">
@@ -167,6 +152,9 @@
               <!-- Content of the page end -->
               <!-- Sidebar of the page -->
               <aside id="sidebar" class="col-xs-12 col-md-3">
+
+                <button onclick = "location.href = '/edit-page'" type="button" id="write-button"> 북리뷰 작성하기 </button>
+
                 <!-- 새 책 소개 from API -->
                 <section class="widget recent-posts-widget wow fadeInUp" data-wow-delay="0.6s">
                   <header class="widget-head">
@@ -199,7 +187,6 @@
                 <!-- 새 책 소개 from API ends -->
                 <!-- 검색기능 - 레거시 -->
                 <div class="searchbox mb-3 mx-0">
-                  <div class="header">
                     <div class="input-group searchbox">
                       <input
                         type="text"
@@ -231,7 +218,6 @@
                         글작성
                       </button>
                     </div>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 검색기능 개선 필요 -->
-                  </div>
                 </div>
                 <!-- 검색기능 - 레거시 end -->
                 <!-- 검색기능 - 신규 -->
