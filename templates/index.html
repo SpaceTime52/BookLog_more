@@ -34,6 +34,7 @@
     <script type="text/javascript">
       $(document).ready(function () {
         render_nav();
+        render_loginRegisterModal()
         listing();
 
         let searchInputTag = document.getElementById("bookReviewSearch");
@@ -121,7 +122,7 @@
                                   <div class="text-wrap">
                                     <h5><a href="/detail/${number}" >${title}</a></h5>
                                     <p>${star_img}</p>
-                                    <a href="/detail/${number}" class="link-more">${nickname}</a>
+                                    <a href="javascript: changeInputValue('${nickname}')" class="link-more">${nickname}</a>
                                   </div>
                                 </div
                                 </a>
@@ -133,6 +134,13 @@
             }
           },
         });
+      }
+
+      function changeInputValue(str) {
+        document.getElementById("bookReviewSearch").value = str;
+        filter();
+        window.scrollTo(0,0);
+
       }
 
 

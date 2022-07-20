@@ -34,15 +34,13 @@
     <script>
 
         $(document).ready(function () {
-            
+
             render_nav();
+            render_loginRegisterModal();
 
             let stars = "⭐️".repeat('{{book_score}}');
             document.getElementById('stars').innerHTML = stars;
 
-            addNickname();
-            hidebtn();
-            is_login_state();
         });
 
         function is_login_state () {

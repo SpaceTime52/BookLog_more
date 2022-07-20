@@ -15,8 +15,19 @@
                           <div class="col-xs-9 col-sm-10 nav-holder">
 
                               <!-- Nav of the page -->
-                              <nav id="nav" class="navbar navbar-default">
-
+                              <nav id="nav" class="nav justify-content-end">
+                                <ul class="nav">
+                                  <li class="nav-item">
+                                    <a class="nav-link text-dark" style="display: inline-block;" id="for_control_1" aria-current="page" href="javascript:open_loginModal();">로그인</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link text-dark" style="display: inline-block;" id="for_control_2" href='javascript:open_resgisterModal();'>회원가입</a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link text-dark disabled is-hidden" style="display: inline-block;" id="nickname"></a>
+                                    <a class="nav-link text-dark is-hidden" style="display: inline-block;" id="logout" onclick="click_logout()">로그아웃</a>
+                                  </li>
+                                </ul>
                               </nav>
                               <!-- Nav of the page -->
                           </div>
@@ -24,12 +35,337 @@
                     </div>
                     </div>
                     <section class="widget profile-widget p-5" id="head-section">
-                    <h2>단 한 권의 책만 <br>읽은 사람을 경계하라</h2>
+                    <h2>" 단 한 권의 책만 <br>읽은 사람을 경계하라 "</h2>
                     <p class='m-0'> 책을 접할 때에도 다양한 관점을 가지는 게 좋습니다. 서로 읽은 책을 공유하면서 인사이트를 나누어요.<br>/이 페이지는 팀프로젝트로 제작되었습니다./</p>
                     </section>
                 </header> `;
 
   $("#header-slot").append(nav_html);
+}
+
+function render_loginRegisterModal() {
+  let modal_html = `
+                  <!-- Login Modal -->
+                  <div class="modal fade" id="loginModal" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="loginModalLabel">로그인</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                          <div class="widget widget_search m-0">
+                            <input
+                              type="text"
+                              class = "mb-3"
+                              id="input-username"
+                              placeholder="아이디를 입력하세요."
+                            />
+                            <input
+                              type="password"
+                              class = "mb-3"
+                              id="input-password"
+                              placeholder="비밀번호를 입력하세요."
+                            />
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-warning" onclick="sign_in()">로그인</button>
+                          <button type="button" class="btn btn-warning" data-bs-dismiss="modal">취소</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Login Modal End -->
+                  
+                  <!-- Register Modal -->
+                  <div class="modal fade" id="registerModal" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">회원 가입</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="widget widget_search m-0">
+
+                          <input
+                            type="text"
+                            class = "mb-3"
+                            id="input-username-signup"
+                            placeholder="아이디"
+                          />
+                          <p id="help-id" class="help"> 아이디는 2-10자의 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.</p>
+                          <p id="help-id-login" class="help is-danger"></p>
+
+                          <input
+                            type="password"
+                            class = "mb-3"
+                            id="input-password1"
+                            placeholder="비밀번호"
+                          />
+                          <p id="help-password" class="help"> 영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+
+                          <input
+                            type="password"
+                            class = "mb-3"
+                            id="input-password2"
+                            placeholder="비밀번호 재입력"
+                          />
+                          <p id="help-password2" class="help"> 비밀번호를 다시 한 번 입력해주세요. </p>
+
+                          <input
+                            type="text"
+                            class = "mb-3"
+                            id="input-nickname"
+                            placeholder="닉네임"
+                          />
+                          <p id="help-nickname" class="help"> 닉네임은 한글 2~4글자만 가능합니다. </p>
+                          
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" onclick="sign_up()">회원 가입</button>
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" >취소</button>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <!-- Register Modal End -->
+                  `;
+
+  $("body").append(modal_html);
+}
+
+function open_loginModal() {
+  $("#loginModal").modal("show");
+}
+
+function open_resgisterModal() {
+  $("#registerModal").modal("show");
+}
+
+// ------------------------------------------
+
+function sign_in() {
+  let username = $("#input-username").val();
+  let password = $("#input-password").val();
+
+  if (username == "") {
+    $("#help-id-login").text("아이디를 입력해주세요.");
+    $("#input-username").focus();
+
+    return;
+  } else {
+    $("#help-id-login").text("");
+  }
+
+  if (password == "") {
+    $("#help-password-login").text("비밀번호를 입력해주세요.");
+    $("#input-password").focus();
+    return;
+  } else {
+    $("#help-password-login").text("");
+  }
+
+  $.ajax({
+    type: "POST",
+    url: "/login/sign_in",
+    data: {
+      username_give: username,
+      password_give: password,
+    },
+    success: function (response, id) {
+      if (response["result"] == "success") {
+        $.cookie("mytoken", response["token"], { path: "/" });
+        login_check(response);
+
+        window.location.replace("/");
+      } else {
+        alert(response["msg"]);
+      }
+    },
+  });
+}
+
+function login_check(response) {
+  let check = response["result"];
+  let check_id = response["id"];
+
+  $.ajax({
+    type: "POST",
+    url: "/login/login_check",
+    data: {
+      check_done_give: check,
+      check_id_give: check_id,
+    },
+    success: function (nickname) {
+      console.log(nickname);
+    },
+  });
+}
+
+function is_password(asValue) {
+  let regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+  return regExp.test(asValue);
+}
+
+function is_nick(asValue) {
+  let regExp = /^[가-힣]{2,4}$/;
+  return regExp.test(asValue);
+}
+
+function toggle_sign_up() {
+  window.location.href = "/register";
+}
+
+function sign_up() {
+  let username = $("#input-username").val();
+  let password = $("#input-password").val();
+  let password2 = $("#input-password2").val();
+  let nickname = $("#input-nickname").val();
+
+  if ($("#help-id").hasClass("is-danger")) {
+    alert("아이디를 다시 확인해주세요.");
+    return;
+  } else if (!$("#help-id").hasClass("is-success")) {
+    alert("아이디 중복확인을 해주세요.");
+    return;
+  }
+
+  if (password == "") {
+    $("#help-password")
+      .text("비밀번호를 입력해주세요.")
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-password").focus();
+    return;
+  } else if (!is_password(password)) {
+    $("#help-password")
+      .text(
+        "비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자"
+      )
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-password").focus();
+    return;
+  } else {
+    $("#help-password")
+      .text("사용할 수 있는 비밀번호입니다.")
+      .removeClass("is-danger")
+      .addClass("is-success");
+  }
+  if (password2 == "") {
+    $("#help-password2")
+      .text("비밀번호를 입력해주세요.")
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-password2").focus();
+    return;
+  } else if (password2 != password) {
+    $("#help-password2")
+      .text("비밀번호가 일치하지 않습니다.")
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-password2").focus();
+    return;
+  } else {
+    $("#help-password2")
+      .text("비밀번호가 일치합니다.")
+      .removeClass("is-danger")
+      .addClass("is-success");
+  }
+  if (!is_nick(nickname)) {
+    $("#help-nickname")
+      .text("닉네임의 형식을 확인해주세요.한글 2~4자 사용 가능")
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-nickname").focus();
+    return;
+  }
+  $.ajax({
+    type: "POST",
+    url: "/register/sign_up",
+    data: {
+      username_give: username,
+      password_give: password,
+      nickname_give: nickname,
+    },
+    success: function (response) {
+      alert("회원가입을 축하드립니다!");
+      window.location.replace("/login");
+    },
+  });
+}
+
+// 정규표현식 검증 함수
+function is_nickname(asValue) {
+  let regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+  return regExp.test(asValue);
+}
+
+function is_password(asValue) {
+  let regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+  return regExp.test(asValue);
+}
+function is_nick(asValue) {
+  let regExp = /^[가-힣]{2,4}$/;
+  return regExp.test(asValue);
+}
+
+//아이디 중복확인 함수
+function check_dup() {
+  let username = $("#input-username").val();
+
+  if (username == "") {
+    $("#help-id")
+      .text("아이디를 입력해주세요.")
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-username").focus();
+    return;
+  }
+  if (!is_nickname(username)) {
+    $("#help-id")
+      .text(
+        "아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이"
+      )
+      .removeClass("is-safe")
+      .addClass("is-danger");
+    $("#input-username").focus();
+    return;
+  }
+
+  $("#help-id").addClass("is-loading");
+  $.ajax({
+    type: "POST",
+    url: "/register/check_dup",
+    data: {
+      username_give: username,
+    },
+    success: function (response) {
+      if (response["exists"]) {
+        $("#help-id")
+          .text("이미 존재하는 아이디입니다.")
+          .removeClass("is-safe")
+          .addClass("is-danger");
+        $("#input-username").focus();
+      } else {
+        $("#help-id")
+          .text("사용할 수 있는 아이디입니다.")
+          .removeClass("is-danger")
+          .addClass("is-success");
+      }
+      $("#help-id").removeClass("is-loading");
+    },
+  });
+}
+function toggle_sign_up() {
+  window.location.replace("/");
 }
 
 // (function (factory) {
@@ -119,32 +455,6 @@
 // });
 
 //------------------------------------------------------------------
-
-// function render_nav(nickname, title) {
-//   let nav_html = `<nav class="navbar bg-light justify-content-md-center" id="nav">
-//       <div class="container-fluid px-5 bg-white">
-//         <a class="navbar-brand" href='/'>
-//         HOME
-//         </a>
-//         <ul class="nav justify-content-end">
-//           <li class="nav-item">
-//             <a class="nav-link active text-dark" id="for_control_1" aria-current="page" href="/login">로그인</a>
-//           </li>
-//           <li class="nav-item">
-//             <a class="nav-link text-dark"id="for_control_2" href='/register'>회원가입</a>
-//           </li>
-//           <li class="nav-item">
-//             <a class="nav-link text-dark disabled is-hidden" id="nickname"></a>
-//             <a class="nav-link text-dark is-hidden" id="logout" onclick="click_logout()">로그아웃</a>
-//           </li>
-//         </ul>
-//       </div>
-//       </nav>
-//       <div class="book-top-bar"> </div>
-//       `;
-
-//   $("#header_above").append(nav_html);
-// }
 
 // function click_logout() {
 //   $.removeCookie = function (key, options) {
