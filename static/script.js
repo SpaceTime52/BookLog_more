@@ -1,44 +1,73 @@
-﻿function render_nav() {
-  let nav_html = `
-                  <header id="header" class="version-ii">
-                    <div class="stick-holder">
-                    <div class="container">
-                        <div class="row holder">
-                          <div class="col-xs-3 col-sm-2">
-                              <!-- Logo of the page -->
-                              <div class="logo">
-                              <a href="/" style='text-decoration:none;'
-                                  ><i class="fa-solid fa-book fa-2xl" style='color: #333;'></i></a>
-                              </div>
-                              <!-- Logo of the page end -->
-                          </div>
-                          <div class="col-xs-9 col-sm-10 nav-holder">
+﻿function getNicknameLoggedIn() {
+  return "김보현";
+}
 
-                              <!-- Nav of the page -->
-                              <nav id="nav" class="nav justify-content-end">
-                                <ul class="nav">
-                                  <li class="nav-item m-3">
-                                    <a class="nav-link text-dark m-3" style="display: inline-block;" id="for_control_1" aria-current="page" href="javascript:open_loginModal();">로그인</a>
-                                  </li>
-                                  <li class="nav-item m-3">
-                                    <a class="nav-link text-dark m-3" style="display: inline-block;" id="for_control_2" href='javascript:open_resgisterModal();'>회원가입</a>
-                                  </li>
-                                  <li class="nav-item m-3">
-                                    <a class="nav-link text-dark disabled is-hidden m-3" style="display: inline-block;" id="nickname"></a>
-                                    <a class="nav-link text-dark is-hidden m-3" style="display: inline-block;" id="logout" onclick="click_logout()">로그아웃</a>
-                                  </li>
-                                </ul>
-                              </nav>
-                              <!-- Nav of the page -->
-                          </div>
+function login(isLoggedIn) {
+  if (isLoggedIn) {
+    // 로그인 상태이면
+    $("#nav1_beforeLogin").addClass("d-none");
+    $("#nav2_beforeLogin").addClass("d-none");
+    $("#nav1_afterLogin").removeClass("d-none");
+    $("#nav2_afterLogin").removeClass("d-none");
+  } else {
+    // 로그아웃 되면
+    $("#nav1_beforeLogin").removeClass("d-none");
+    $("#nav2_beforeLogin").removeClass("d-none");
+    $("#nav1_afterLogin").addClass("d-none");
+    $("#nav2_afterLogin").addClass("d-none");
+  }
+}
+
+function render_nav() {
+  let nav_html = `
+                <header id="header" class="version-ii">
+                  <div class="stick-holder">
+                  <div class="container">
+                      <div class="row holder">
+                        <div class="col-xs-3 col-sm-2">
+                            <!-- Logo of the page -->
+                            <div class="logo">
+                            <a href="/" style='text-decoration:none;'
+                                ><i class="fa-solid fa-book fa-2xl" style='color: #333;'></i></a>
+                            </div>
+                            <!-- Logo of the page end -->
                         </div>
-                    </div>
-                    </div>
-                    <section class="widget profile-widget p-5" id="head-section">
-                    <h2>" 단 한 권의 책만 <br>읽은 사람을 경계하라 "</h2>
-                    <p class='m-0'> 책을 접할 때에도 다양한 관점을 가지는 게 좋습니다. 서로 읽은 책을 공유하면서 인사이트를 나누어요.<br>/이 페이지는 팀프로젝트로 제작되었습니다./</p>
-                    </section>
-                </header> `;
+                        <div class="col-xs-9 col-sm-10 nav-holder">
+
+                            <!-- Nav of the page -->
+                            <nav id="nav" class="nav justify-content-end">
+                              <ul class="nav">
+
+                                <!-- Nav of the page -->
+                                <li id="nav1_beforeLogin" class="nav-item m-2">
+                                  <a class="nav-link text-dark d-block" id="login_nav" aria-current="page" href="javascript:open_loginModal();">로그인</a>
+                                </li>
+                                <li id="nav2_beforeLogin" class="nav-item m-2">
+                                  <a class="nav-link text-dark d-block" id="register_nav" href='javascript:open_resgisterModal();'>회원가입</a>
+                                </li>
+                                <!-- Nav of the page -->
+
+                                <!-- Nav of the page : after Login -->
+                                <li id="nav1_afterLogin" class="nav-item m-2  d-none">
+                                  <a class="nav-link text-dark d-block " id="nickname_nav"> 김보현 </a>
+                                </li>
+                                <li id="nav2_afterLogin" class="nav-item m-2  d-none">
+                                  <a class="nav-link text-dark d-block" id="logout_nav" onclick="click_logout()">로그아웃</a>
+                                </li>
+                                <!-- Nav of the page : after Login -->
+
+                              </ul>
+                            </nav>
+
+                        </div>
+                      </div>
+                  </div>
+                  </div>
+                  <section class="widget profile-widget p-5" id="head-section">
+                  <h2>" 단 한 권의 책만 <br>읽은 사람을 경계하라 "</h2>
+                  <p class='m-0'> 책을 접할 때에도 다양한 관점을 가지는 게 좋습니다. 서로 읽은 책을 공유하면서 인사이트를 나누어요.<br>/이 페이지는 팀프로젝트로 제작되었습니다./</p>
+                  </section>
+              </header> `;
 
   $("#header-slot").append(nav_html);
 }
@@ -62,12 +91,14 @@ function render_loginRegisterModal() {
                               class = "mb-3"
                               id="input-username"
                               placeholder="아이디를 입력하세요."
+                              onKeypress="javascript:if(event.keyCode==13){checkFill();}"
                             />
                             <input
                               type="password"
                               class = "mb-3"
                               id="input-password"
                               placeholder="비밀번호를 입력하세요."
+                              onKeypress="javascript:if(event.keyCode==13){checkFill();}"
                             />
                           </div>
                         </div>
@@ -95,7 +126,7 @@ function render_loginRegisterModal() {
 
                           <input
                             type="text"
-                            class = "mb-3"
+                            class = "mb-1"
                             id="input-username-signup"
                             placeholder="아이디"
                           />
@@ -105,7 +136,7 @@ function render_loginRegisterModal() {
 
                           <input
                             type="password"
-                            class = "mb-3"
+                            class = "mb-1"
                             id="input-password1"
                             placeholder="비밀번호"
                           />
@@ -113,7 +144,7 @@ function render_loginRegisterModal() {
 
                           <input
                             type="password"
-                            class = "mb-3"
+                            class = "mb-1"
                             id="input-password2"
                             placeholder="비밀번호 재입력"
                           />
@@ -121,7 +152,7 @@ function render_loginRegisterModal() {
 
                           <input
                             type="text"
-                            class = "mb-3"
+                            class = "mb-1"
                             id="input-nickname"
                             placeholder="닉네임"
                           />
@@ -196,8 +227,6 @@ function open_resgisterModal() {
   pw_1onInput.addEventListener("input", (event) => {
     let password = event.target.value;
 
-    console.log("pw1", password);
-
     if (password == "") {
       $("#help-password")
         .text("비밀번호를 입력해주세요.")
@@ -222,9 +251,6 @@ function open_resgisterModal() {
   pw_2onInput.addEventListener("input", (event) => {
     let password2 = event.target.value;
     let password1 = document.getElementById("input-password1").value;
-
-    console.log("pw2", password2);
-    console.log("pw1", password1);
 
     if (password2 == "") {
       $("#help-password2")
@@ -259,36 +285,51 @@ function open_resgisterModal() {
         .removeClass("is-safe")
         .addClass("is-danger");
     } else {
-      $("#help-nickname")
-        .text("닉네임으로 사용 가능합니다.")
-        .removeClass("is-danger")
-        .addClass("is-success");
+      $("#help-nickname").addClass("is-loading");
+
+      $.ajax({
+        type: "POST",
+        url: "/register/check_nickname",
+        data: {
+          nickname_tocheck: nickname,
+        },
+        success: function (response) {
+          if (response["exists"]) {
+            $("#help-nickname")
+              .text("이미 존재하는 닉네임입니다.")
+              .removeClass("is-safe")
+              .addClass("is-danger");
+          } else {
+            $("#help-nickname")
+              .text("닉네임으로 사용 가능합니다.")
+              .removeClass("is-danger")
+              .addClass("is-success");
+          }
+          $("#help-nickname").removeClass("is-loading");
+        },
+      });
     }
   });
 }
 
 // ------------------------------------------
 
-function sign_in() {
+function checkFill() {
   let username = $("#input-username").val();
   let password = $("#input-password").val();
 
-  if (username == "") {
-    $("#help-id-login").text("아이디를 입력해주세요.");
-    $("#input-username").focus();
-
-    return;
+  if (!username) {
+    alert("ID를 입력해주세요");
+  } else if (!password) {
+    alert("비밀번호를 입력해주세요");
   } else {
-    $("#help-id-login").text("");
+    sign_in();
   }
+}
 
-  if (password == "") {
-    $("#help-password-login").text("비밀번호를 입력해주세요.");
-    $("#input-password").focus();
-    return;
-  } else {
-    $("#help-password-login").text("");
-  }
+function sign_in() {
+  let username = $("#input-username").val();
+  let password = $("#input-password").val();
 
   $.ajax({
     type: "POST",
@@ -299,36 +340,20 @@ function sign_in() {
     },
     success: function (response, id) {
       if (response["result"] == "success") {
-        $.cookie("mytoken", response["token"], { path: "/" });
-        login_check(response);
+        console.log(response["id"], response["nickname"], "로그인 완료");
 
-        window.location.replace("/");
+        // $.cookie("mytoken", response["token"], { path: "/" });
+
+        $("#loginModal").modal("hide");
       } else {
         alert(response["msg"]);
       }
     },
   });
-}
-
-function login_check(response) {
-  let check = response["result"];
-  let check_id = response["id"];
-
-  $.ajax({
-    type: "POST",
-    url: "/login/login_check",
-    data: {
-      check_done_give: check,
-      check_id_give: check_id,
-    },
-    success: function (nickname) {
-      console.log(nickname);
-    },
-  });
-}
+} // 쿠키, 세션 등록 필요함
 
 function sign_up() {
-  let username = $("#input-username-signupe").val();
+  let username = $("#input-username-signup").val();
   let password = $("#input-password1").val();
   let nickname = $("#input-nickname").val();
 
@@ -350,10 +375,12 @@ function sign_up() {
         alert("회원가입을 축하드립니다!");
         $("#registerModal").modal("hide");
 
-        $("#input-username-signup").val()='';
-        $("#input-password1").empty();
-        $("#input-password2").empty();
-        $("#input-nickname").empty();
+        $("#input-username-signup").val("");
+        $("#input-password1").val("");
+        $("#input-password2").val("");
+        $("#input-nickname").val("");
+
+        open_loginModal();
       },
     });
   } else {
@@ -377,93 +404,93 @@ function nicknameChecker(nickname) {
   return regExp.test(nickname);
 }
 
-// (function (factory) {
-//   if (typeof define === "function" && define.amd) {
-//     define(["jquery"], factory);
-//   } else if (typeof exports === "object") {
-//     factory(require("jquery"));
-//   } else {
-//     factory(jQuery);
-//   }
-// })(function ($) {
-//   var pluses = /\+/g;
-//   function encode(s) {
-//     return config.raw ? s : encodeURIComponent(s);
-//   }
-//   function decode(s) {
-//     return config.raw ? s : decodeURIComponent(s);
-//   }
-//   function stringifyCookieValue(value) {
-//     return encode(config.json ? JSON.stringify(value) : String(value));
-//   }
-//   function parseCookieValue(s) {
-//     if (s.indexOf('"') === 0) {
-//       s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-//     }
-//     try {
-//       s = decodeURIComponent(s.replace(pluses, " "));
-//       return config.json ? JSON.parse(s) : s;
-//     } catch (e) {}
-//   }
-//   function read(s, converter) {
-//     var value = config.raw ? s : parseCookieValue(s);
-//     return $.isFunction(converter) ? converter(value) : value;
-//   }
-//   var config = ($.cookie = function (key, value, options) {
-//     if (arguments.length > 1 && !$.isFunction(value)) {
-//       options = $.extend({}, config.defaults, options);
+//------- 쿠키 처리 관련 함수
 
-//       if (typeof options.expires === "number") {
-//         var days = options.expires,
-//           t = (options.expires = new Date());
-//         t.setTime(+t + days * 864e5);
-//       }
-//       return (document.cookie = [
-//         encode(key),
-//         "=",
-//         stringifyCookieValue(value),
-//         options.expires ? "; expires=" + options.expires.toUTCString() : "", // use expires attribute, max-age is not supported by IE
-//         options.path ? "; path=" + options.path : "",
-//         options.domain ? "; domain=" + options.domain : "",
-//         options.secure ? "; secure" : "",
-//       ].join(""));
-//     }
+(function (factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["jquery"], factory);
+  } else if (typeof exports === "object") {
+    factory(require("jquery"));
+  } else {
+    factory(jQuery);
+  }
+})(function ($) {
+  var pluses = /\+/g;
+  function encode(s) {
+    return config.raw ? s : encodeURIComponent(s);
+  }
+  function decode(s) {
+    return config.raw ? s : decodeURIComponent(s);
+  }
+  function stringifyCookieValue(value) {
+    return encode(config.json ? JSON.stringify(value) : String(value));
+  }
+  function parseCookieValue(s) {
+    if (s.indexOf('"') === 0) {
+      s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+    }
+    try {
+      s = decodeURIComponent(s.replace(pluses, " "));
+      return config.json ? JSON.parse(s) : s;
+    } catch (e) {}
+  }
+  function read(s, converter) {
+    var value = config.raw ? s : parseCookieValue(s);
+    return $.isFunction(converter) ? converter(value) : value;
+  }
+  var config = ($.cookie = function (key, value, options) {
+    if (arguments.length > 1 && !$.isFunction(value)) {
+      options = $.extend({}, config.defaults, options);
 
-//     var result = key ? undefined : {};
+      if (typeof options.expires === "number") {
+        var days = options.expires,
+          t = (options.expires = new Date());
+        t.setTime(+t + days * 864e5);
+      }
+      return (document.cookie = [
+        encode(key),
+        "=",
+        stringifyCookieValue(value),
+        options.expires ? "; expires=" + options.expires.toUTCString() : "", // use expires attribute, max-age is not supported by IE
+        options.path ? "; path=" + options.path : "",
+        options.domain ? "; domain=" + options.domain : "",
+        options.secure ? "; secure" : "",
+      ].join(""));
+    }
 
-//     var cookies = document.cookie ? document.cookie.split("; ") : [];
+    var result = key ? undefined : {};
 
-//     for (var i = 0, l = cookies.length; i < l; i++) {
-//       var parts = cookies[i].split("=");
-//       var name = decode(parts.shift());
-//       var cookie = parts.join("=");
+    var cookies = document.cookie ? document.cookie.split("; ") : [];
 
-//       if (key && key === name) {
-//         result = read(cookie, value);
-//         break;
-//       }
+    for (var i = 0, l = cookies.length; i < l; i++) {
+      var parts = cookies[i].split("=");
+      var name = decode(parts.shift());
+      var cookie = parts.join("=");
 
-//       if (!key && (cookie = read(cookie)) !== undefined) {
-//         result[name] = cookie;
-//       }
-//     }
+      if (key && key === name) {
+        result = read(cookie, value);
+        break;
+      }
 
-//     return result;
-//   });
+      if (!key && (cookie = read(cookie)) !== undefined) {
+        result[name] = cookie;
+      }
+    }
 
-//   config.defaults = {};
+    return result;
+  });
 
-//   $.removeCookie = function (key, options) {
-//     if ($.cookie(key) === undefined) {
-//       return false;
-//     }
+  config.defaults = {};
 
-//     $.cookie(key, "", $.extend({}, options, { expires: -1 }));
-//     return !$.cookie(key);
-//   };
-// });
+  $.removeCookie = function (key, options) {
+    if ($.cookie(key) === undefined) {
+      return false;
+    }
 
-//------------------------------------------------------------------
+    $.cookie(key, "", $.extend({}, options, { expires: -1 }));
+    return !$.cookie(key);
+  };
+});
 
 // function click_logout() {
 //   $.removeCookie = function (key, options) {
@@ -489,19 +516,4 @@ function nicknameChecker(nickname) {
 //       $("#nickname").text(nick["nick"] + " 님");
 //     },
 //   });
-// }
-
-// function hidebtn() {
-//   if (document.cookie != "") {
-//     console.log("로그인이 되어있습니다.");
-//     $("#for_control_1").hide();
-//     $("#for_control_2").hide();
-//     $("#nickname").toggleClass("is-hidden");
-//     $("#logout").toggleClass("is-hidden");
-//     addNickname();
-//   } else {
-//     console.log("로그인이 되어있지 않습니다.");
-//     $("#nickname").hide();
-//     $("#logout").hide();
-//   }
 // }

@@ -31,7 +31,7 @@ review_client = MongoClient('mongodb+srv://test:sparta@cluster0.plrlvlp.mongodb.
 review_db = review_client.spart_week1
 
 
-# 메인페이지 @문동환
+# 메인페이지
 @app.route('/')
 def main():
     return render_template("index.html")
@@ -43,7 +43,7 @@ def main_get():
     return jsonify({'books': book_list})
 
 
-# 상세페이지 @최효선
+# 상세페이지
 @app.route('/detail')
 def detail():
     return render_template("detail.html")
@@ -70,10 +70,6 @@ def detail_bookdata(num):
                            book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick)
 
 
-
-
-
-
 @app.route('/detail/login', methods=['POST'])
 def login_state():
 
@@ -91,7 +87,7 @@ def login_state():
 
 
 
-# 작성페이지 @김보현
+# 작성페이지
 @app.route('/edit-page')
 def edit_page():
     # token_receive = request.cookies.get('mytoken')
@@ -102,7 +98,7 @@ def edit_page():
                             # , nickname=nickname)
 
 
-# 수정페이지 @김보현
+# 수정페이지
 @app.route('/edit/<reviewNo>')
 def edit_review(reviewNo):
     
@@ -117,7 +113,7 @@ def edit_review(reviewNo):
                            isEdit=title, star_score=star_score)
 
 
-# 네이버를 통해 검색된 책자의 리뷰를 작성 @김보현
+# 네이버를 통해 검색된 책자의 리뷰를 작성
 @app.route('/edit-page/<isbn>')
 def find_bookdetail_via_isbn(isbn):
     # /api/call-bookinfo URL로 POST 방식으로 도착한 데이터
@@ -136,7 +132,7 @@ def find_bookdetail_via_isbn(isbn):
     return render_template("edit-page.html", title=title, image=image_url, author=author, description=description)
 
 
-# 작성된 리뷰를 저장 @김보현
+# 작성된 리뷰를 저장
 @app.route('/save-review', methods=['POST'])
 def save_review():
     
@@ -166,7 +162,7 @@ def save_review():
     return render_template("index.html")
 
 
-# 수정된 리뷰를 저장 @김보현
+# 수정된 리뷰를 저장
 @app.route('/update-review', methods=['POST'])
 def update_review():
     booktitle = request.form['booktitle_give']
@@ -185,7 +181,7 @@ def update_review():
     return render_template("index.html")
 
 
-# 리뷰 삭제 @김보현
+# 리뷰 삭제
 @app.route('/delete/<reviewNo>')
 def delete_review(reviewNo):
     review_db.review_test.delete_one({'content_no': int(reviewNo)})
@@ -193,7 +189,7 @@ def delete_review(reviewNo):
     return render_template("index.html")
 
 
-# naverapi에서 검색어 정보를 불러오는 코드 @김보현
+# naverapi에서 검색어 정보를 불러오는 코드
 @app.route('/api/call-bookinfo', methods=['POST'])
 def give_bookInfo():
     data = urllib.parse.unquote(request.data)
@@ -207,74 +203,51 @@ def give_bookInfo():
     return result
 
 
-# 로그인페이지 @금윤성
-@app.route('/login')
-def login():
-    return render_template("login.html")
-
-
-# 로그인  @금윤성
+# 로그인
 @app.route('/login/sign_in', methods=['POST'])
 def sign_in():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
-    user_nickname = db.users.find_one({'username': username_receive})
-    nick = user_nickname['nickname']
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    
+    # 해당하는 값 찾아보기 
     result = db.users.find_one({'username': username_receive, 'password': pw_hash})
+    
+    # 찾으면,
     if result is not None:
+        
         payload = {
-            'id': username_receive,
-            'nickname': nick,
+            'id': result['username'],
+            'nickname': result['nickname'],
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         return jsonify({'result': 'success', 'token': token, 'id': payload["id"], 'nickname': payload["nickname"]})
-    # 찾지 못하면
+    
+    # 못찾으면, 
     else:
 
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+        return jsonify({'result': 'fail', 'msg': '아이디 또는 비밀번호가 일치하지 않습니다.'})
+    
 
-
-# 로그인 체크, 닉네임 반환 @금윤성
-@app.route('/login/login_check', methods=['POST'])
-def login_check():
-    check_done_receive = request.form['check_done_give']
-    check_id_receive = request.form['check_id_give']
-    user = db.users.find_one({'username': check_id_receive})
-
-    if check_done_receive == 'success':
-        return jsonify({'nickname': user['nickname']})
-
-
-# 회원가입 페이지 @금윤성
-@app.route('/register')
-def register():
-    return render_template("register.html")
-
-
-# 회원가입 명령 @금윤성
+# 회원가입 명령
 @app.route('/register/sign_up', methods=['POST'])
 def sign_up():
-    username_receive = request.form['username_give']
-    password_receive = request.form['password_give']
-    nickname_receive = request.form['nickname_give']
-    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+
     doc = {
-        "username": username_receive,  # 아이디
-        "password": password_hash,  # 비밀번호
-        "nickname": nickname_receive,
-        "profile_name": username_receive,  # 프로필 이름 기본값은 아이디
-        "profile_pic": "",  # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
+        "username": request.form['username_give'],  # 아이디
+        "password": hashlib.sha256(request.form['password_give'].encode('utf-8')).hexdigest(),  # 비밀번호
+        "nickname": request.form['nickname_give'],
+        "profile_name": request.form['username_give'],  # 프로필 이름 기본값은 아이디
     }
+    
     db.users.insert_one(doc)
+    
     return jsonify({'result': 'success'})
 
 
-# 기존에 있는 아이디인지 확인 @금윤성
+# 기존에 있는 아이디인지 확인
 @app.route('/register/check_dup', methods=['POST'])
 def check_dup():
     username_receive = request.form['username_give']
@@ -282,7 +255,18 @@ def check_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-# 로그인 정보 받기 @금윤성
+# 기존에 있는 아이디인지 확인 
+@app.route('/register/check_nickname', methods=['POST'])
+def check_nickname():
+    nickname_tocheck = request.form['nickname_tocheck']
+    exists = bool(db.users.find_one({"nickname": nickname_tocheck}))
+    
+    print(exists)
+    
+    return jsonify({'result': 'success', 'exists': exists})
+
+
+# 로그인 정보 받기
 @app.route('/index/addnick', methods=['POST'])
 def add_nick():
     token_receive = request.cookies.get('mytoken')

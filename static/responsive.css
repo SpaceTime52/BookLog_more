@@ -476,7 +476,8 @@
     padding: 0;
     position: relative;
   }
-  #nav li a:after {
+
+  /* #nav li a:after {
     position: absolute;
     content: "";
     top: auto;
@@ -501,7 +502,8 @@
   #nav li a:focus:after {
     width: 18px;
     opacity: 1;
-  }
+  } */
+
   #nav .navbar-collapse {
     position: static;
     background: none;

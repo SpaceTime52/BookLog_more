@@ -41,23 +41,12 @@
             let stars = "⭐️".repeat('{{book_score}}');
             document.getElementById('stars').innerHTML = stars;
 
+            if (getNicknameLoggedIn() != '{{book_nick}}'){
+                $('#go-edit').addClass("d-none")
+                $('#go-delete').addClass("d-none")
+            }
+
         });
-
-        function is_login_state () {
-
-            $.ajax(
-                {
-                    type: "POST",
-                    url: "/detail/login",
-                    data: {},
-                    success: function () {
-
-                        $('#id-edit').addClass("is-hidden")
-                        $('#id-delete').addClass("is-hidden")
-
-                    },
-                });
-        }
 
     </script>
 
@@ -99,9 +88,9 @@
                             >
                             
                             <footer>
-                                <strong class="text"><a href="/" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
-                                <strong class="text"><a href="/edit/{{book_num}}" id="id-edit" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
-                                <strong class="text"><a href="/delete/{{book_num}}" id="id-edit"style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
+                                <strong id="go-home" class="text"><a href="/" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
+                                <strong id="go-edit" class="text"><a href="/edit/{{book_num}}" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
+                                <strong id="go-delete" class="text"><a href="/delete/{{book_num}}" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
                             </footer>
 
                             </div>
