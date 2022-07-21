@@ -20,6 +20,8 @@
   
     <!-- JQuery를 import 합니다 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
 
     <!-- Local CSS & JS import -->
     <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
@@ -37,11 +39,12 @@
 
             render_nav();
             render_loginRegisterModal();
+            checkLogin();
 
             let stars = "⭐️".repeat('{{book_score}}');
             document.getElementById('stars').innerHTML = stars;
 
-            if (getNicknameLoggedIn() != '{{book_nick}}'){
+            if ($("#nickname_nav").text() != '{{book_nick}}'){
                 $('#go-edit').addClass("d-none")
                 $('#go-delete').addClass("d-none")
             }

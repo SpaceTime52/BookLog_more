@@ -21,13 +21,14 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
+MONGO_CLIENT_URL = 'mongodb+srv://test:sparta@cluster0.plrlvlp.mongodb.net/?retryWrites=true&w=majority'
 
 # user가 저장된 db
-client = MongoClient('mongodb+srv://test:sparta@cluster0.plrlvlp.mongodb.net/?retryWrites=true&w=majority')
+client = MongoClient(MONGO_CLIENT_URL)
 db = client.spart_week1
 
 # 리뷰가 저장된 db
-review_client = MongoClient('mongodb+srv://test:sparta@cluster0.plrlvlp.mongodb.net/?retryWrites=true&w=majority')
+review_client = MongoClient(MONGO_CLIENT_URL)
 review_db = review_client.spart_week1
 
 
@@ -36,18 +37,15 @@ review_db = review_client.spart_week1
 def main():
     return render_template("index.html")
 
-
 @app.route("/review_test", methods=["GET"])
 def main_get():
     book_list = list(review_db.review_test.find({}, {'_id': False}))
     return jsonify({'books': book_list})
 
-
 # 상세페이지
 @app.route('/detail')
 def detail():
     return render_template("detail.html")
-
 
 @app.route('/detail/reviewData', methods=["GET"])
 def detail_data():
@@ -70,27 +68,28 @@ def detail_bookdata(num):
                            book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick)
 
 
-@app.route('/detail/login', methods=['POST'])
-def login_state():
+# @app.route('/detail/login', methods=['POST'])
+# def login_state():
 
-    user = list(review_db.review_test.find({"content_no": int(a)}, {'_id': False}))
+#     user = list(review_db.review_test.find({"content_no": int(a)}, {'_id': False}))
 
-    token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    print(payload['nickname'])
-    print(user[0]['writer_nickname'])
-    if(payload['nickname'] != user[0]['writer_nickname']):
-        print('다르다')
-        return jsonify({'response':'test'});
-    else:
-        print('같다')
+#     token_receive = request.cookies.get('mytoken')
+#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#     print(payload['nickname'])
+#     print(user[0]['writer_nickname'])
+#     if(payload['nickname'] != user[0]['writer_nickname']):
+#         print('다르다')
+#         return jsonify({'response':'test'});
+#     else:
+#         print('같다')
 
 
 
 # 작성페이지
 @app.route('/edit-page')
 def edit_page():
-    # token_receive = request.cookies.get('mytoken')
+    
+    token_receive = request.cookies.get('mytoken')
     # payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     # nickname = payload['nickname']
 
@@ -216,11 +215,14 @@ def sign_in():
     # 찾으면,
     if result is not None:
         
+        # payload를 만들어 정보를 담고,
         payload = {
             'id': result['username'],
             'nickname': result['nickname'],
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
+        
+        # 토큰에 담아 쿠키에 전달
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         return jsonify({'result': 'success', 'token': token, 'id': payload["id"], 'nickname': payload["nickname"]})
@@ -266,16 +268,38 @@ def check_nickname():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-# 로그인 정보 받기
-@app.route('/index/addnick', methods=['POST'])
-def add_nick():
+# # 로그인 정보 받기
+# @app.route('/index/addnick', methods=['POST'])
+# def add_nick():
+#     token_receive = request.cookies.get('mytoken')
+#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#     nickname = payload['nickname']
+
+#     return jsonify({'nick': nickname})
+
+
+# 토큰을 전달받아 로그인 된 것이 맞는지 다시 한번 확인해서 이용자 정보를 반환하는 서버
+@app.route('/check-login')
+def checkLogin():
+    
     token_receive = request.cookies.get('mytoken')
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    nickname = payload['nickname']
-
-    return jsonify({'nick': nickname})
-
-
+    
+    try:
+        
+        # 받은 토큰을 디코드해서 DB에서 정보를 찾아내어 반환 
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]}, {'_id': 0 })
+        print(user_info)
+        return jsonify(user_info)
+    
+    except jwt.ExpiredSignatureError:
+        
+        return jsonify({"msg": "로그인 시간이 만료되었습니다."})
+    
+    except jwt.exceptions.DecodeError:
+        
+        return jsonify({"msg": "로그인 정보가 존재하지 않습니다."})
+    
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

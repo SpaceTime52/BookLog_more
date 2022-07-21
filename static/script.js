@@ -1,21 +1,28 @@
 ﻿function getNicknameLoggedIn() {
-  return "김보현";
+  console.log(checkLogin()["nickname"]);
+  return;
 }
 
-function login(isLoggedIn) {
-  if (isLoggedIn) {
-    // 로그인 상태이면
-    $("#nav1_beforeLogin").addClass("d-none");
-    $("#nav2_beforeLogin").addClass("d-none");
-    $("#nav1_afterLogin").removeClass("d-none");
-    $("#nav2_afterLogin").removeClass("d-none");
-  } else {
-    // 로그아웃 되면
-    $("#nav1_beforeLogin").removeClass("d-none");
-    $("#nav2_beforeLogin").removeClass("d-none");
-    $("#nav1_afterLogin").addClass("d-none");
-    $("#nav2_afterLogin").addClass("d-none");
-  }
+//쿠키가 있으면 답변을 받을 수 있을거임
+function checkLogin() {
+  $.ajax({
+    type: "GET",
+    url: "/check-login",
+    data: {},
+    success: function (response) {
+      if (response["username"]) {
+        $("#nav1_beforeLogin").addClass("d-none");
+        $("#nav2_beforeLogin").addClass("d-none");
+        $("#nav1_afterLogin").removeClass("d-none");
+        $("#nav2_afterLogin").removeClass("d-none");
+        $("#nickname_nav").text(response["nickname"]);
+
+        return response;
+      } else {
+        console.log(response["msg"]);
+      }
+    },
+  });
 }
 
 function render_nav() {
@@ -49,7 +56,7 @@ function render_nav() {
 
                                 <!-- Nav of the page : after Login -->
                                 <li id="nav1_afterLogin" class="nav-item m-2  d-none">
-                                  <a class="nav-link text-dark d-block " id="nickname_nav"> 김보현 </a>
+                                  <a class="nav-link text-dark d-block " id="nickname_nav"></a>
                                 </li>
                                 <li id="nav2_afterLogin" class="nav-item m-2  d-none">
                                   <a class="nav-link text-dark d-block" id="logout_nav" onclick="click_logout()">로그아웃</a>
@@ -342,9 +349,12 @@ function sign_in() {
       if (response["result"] == "success") {
         console.log(response["id"], response["nickname"], "로그인 완료");
 
-        // $.cookie("mytoken", response["token"], { path: "/" });
+        // 토큰을 받아 쿠키 "/" 경로에 담음
+        $.cookie("mytoken", response["token"], { path: "/" });
 
+        // 로그인이 되었으므로 로그인 창 닫고 메뉴 바꿈
         $("#loginModal").modal("hide");
+        checkLogin();
       } else {
         alert(response["msg"]);
       }
@@ -375,12 +385,14 @@ function sign_up() {
         alert("회원가입을 축하드립니다!");
         $("#registerModal").modal("hide");
 
-        $("#input-username-signup").val("");
         $("#input-password1").val("");
         $("#input-password2").val("");
         $("#input-nickname").val("");
 
         open_loginModal();
+
+        $("#input-username").val($("#input-username-signup").val());
+        $("#input-username-signup").val("");
       },
     });
   } else {
@@ -404,116 +416,16 @@ function nicknameChecker(nickname) {
   return regExp.test(nickname);
 }
 
-//------- 쿠키 처리 관련 함수
+function click_logout() {
+  if (confirm("로그아웃 하시겠습니까?")) {
+    // 로그아웃 되면
+    $("#nav1_beforeLogin").removeClass("d-none");
+    $("#nav2_beforeLogin").removeClass("d-none");
+    $("#nav1_afterLogin").addClass("d-none");
+    $("#nav2_afterLogin").addClass("d-none");
 
-(function (factory) {
-  if (typeof define === "function" && define.amd) {
-    define(["jquery"], factory);
-  } else if (typeof exports === "object") {
-    factory(require("jquery"));
-  } else {
-    factory(jQuery);
+    alert("로그아웃이 완료되었습니다.");
+
+    $.removeCookie("mytoken", { path: "/" });
   }
-})(function ($) {
-  var pluses = /\+/g;
-  function encode(s) {
-    return config.raw ? s : encodeURIComponent(s);
-  }
-  function decode(s) {
-    return config.raw ? s : decodeURIComponent(s);
-  }
-  function stringifyCookieValue(value) {
-    return encode(config.json ? JSON.stringify(value) : String(value));
-  }
-  function parseCookieValue(s) {
-    if (s.indexOf('"') === 0) {
-      s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-    }
-    try {
-      s = decodeURIComponent(s.replace(pluses, " "));
-      return config.json ? JSON.parse(s) : s;
-    } catch (e) {}
-  }
-  function read(s, converter) {
-    var value = config.raw ? s : parseCookieValue(s);
-    return $.isFunction(converter) ? converter(value) : value;
-  }
-  var config = ($.cookie = function (key, value, options) {
-    if (arguments.length > 1 && !$.isFunction(value)) {
-      options = $.extend({}, config.defaults, options);
-
-      if (typeof options.expires === "number") {
-        var days = options.expires,
-          t = (options.expires = new Date());
-        t.setTime(+t + days * 864e5);
-      }
-      return (document.cookie = [
-        encode(key),
-        "=",
-        stringifyCookieValue(value),
-        options.expires ? "; expires=" + options.expires.toUTCString() : "", // use expires attribute, max-age is not supported by IE
-        options.path ? "; path=" + options.path : "",
-        options.domain ? "; domain=" + options.domain : "",
-        options.secure ? "; secure" : "",
-      ].join(""));
-    }
-
-    var result = key ? undefined : {};
-
-    var cookies = document.cookie ? document.cookie.split("; ") : [];
-
-    for (var i = 0, l = cookies.length; i < l; i++) {
-      var parts = cookies[i].split("=");
-      var name = decode(parts.shift());
-      var cookie = parts.join("=");
-
-      if (key && key === name) {
-        result = read(cookie, value);
-        break;
-      }
-
-      if (!key && (cookie = read(cookie)) !== undefined) {
-        result[name] = cookie;
-      }
-    }
-
-    return result;
-  });
-
-  config.defaults = {};
-
-  $.removeCookie = function (key, options) {
-    if ($.cookie(key) === undefined) {
-      return false;
-    }
-
-    $.cookie(key, "", $.extend({}, options, { expires: -1 }));
-    return !$.cookie(key);
-  };
-});
-
-// function click_logout() {
-//   $.removeCookie = function (key, options) {
-//     if ($.cookie(key) === undefined) {
-//       return false;
-//     }
-
-//     $.cookie(key, "", $.extend({}, options, { expires: -1 }));
-//     return !$.cookie(key);
-//   };
-//   $.removeCookie("mytoken", { path: "/" });
-//   alert("로그아웃이 되었습니다.");
-
-//   window.location.href = "/";
-// }
-
-// function addNickname() {
-//   $.ajax({
-//     type: "POST",
-//     url: "/index/addnick",
-//     data: {},
-//     success: function (nick) {
-//       $("#nickname").text(nick["nick"] + " 님");
-//     },
-//   });
-// }
+}

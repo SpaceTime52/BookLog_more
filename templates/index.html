@@ -20,6 +20,8 @@
 
     <!-- JQuery를 import 합니다 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
 
     <!-- Local CSS & JS import -->
     <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
@@ -36,6 +38,7 @@
         render_nav();
         render_loginRegisterModal()
         listing();
+        checkLogin();
 
         let searchInputTag = document.getElementById("bookReviewSearch");
         
