@@ -1,9 +1,4 @@
-﻿function getNicknameLoggedIn() {
-  console.log(checkLogin()["nickname"]);
-  return;
-}
-
-//쿠키가 있으면 답변을 받을 수 있을거임
+﻿//쿠키가 있으면 답변을 받을 수 있을거임
 function checkLogin() {
   $.ajax({
     type: "GET",
@@ -16,8 +11,6 @@ function checkLogin() {
         $("#nav1_afterLogin").removeClass("d-none");
         $("#nav2_afterLogin").removeClass("d-none");
         $("#nickname_nav").text(response["nickname"]);
-
-        return response;
       } else {
         console.log(response["msg"]);
       }
@@ -427,5 +420,6 @@ function click_logout() {
     alert("로그아웃이 완료되었습니다.");
 
     $.removeCookie("mytoken", { path: "/" });
+    window.location.reload();
   }
 }

@@ -135,7 +135,6 @@ def find_bookdetail_via_isbn(isbn):
 @app.route('/save-review', methods=['POST'])
 def save_review():
     
-    print('함수 진입')
     all_reviews = list(review_db.review_test.find({}, {'_id': False}))
     
     review_count = all_reviews[-1]['content_no'] + 1

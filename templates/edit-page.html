@@ -45,6 +45,7 @@
         render_nav();
         render_loginRegisterModal();
         checkLogin();
+        var img_url = ''
 
         star_score_visualizer(parseInt('{{star_score}}'));
 
@@ -70,6 +71,18 @@
           fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
           fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
           
+        });
+
+
+        let textareaTag = document.getElementById("post-here");
+
+        textareaTag.addEventListener('click', (event) => {
+
+          if (!$("#image_url")[0]) { 
+            alert('책을 먼저 선택해주세요.')
+            $("#booknameSearch").focus();
+          }
+
         });
 
       });
@@ -126,6 +139,20 @@
         form_data.append("writer_nickname", '김보현');
         form_data.append("star_score", star_score);
 
+        if (!img_url) { 
+          alert('책을 선택해주세요') 
+          return;
+        } else if (booktitle==="책 제목") {
+          alert('책 제목을 확인해주세요');
+          return;
+        } else if (!review_content) {
+          alert('북로그 내용을 입력해주세요.');
+          return;
+        } else if (!star_score) {
+          alert('별점을 입력해주세요');
+          return;
+        };
+
         // ajax : POST 방식으로 save-review 주소에 전송 (python에서 처리한 후 response 보내면, msg 찾아 alert)
         // data에 "form_data" 객체를 담아 전송
 
@@ -172,7 +199,7 @@
 
       function star_score_calculator() {
 
-        var star_score
+        let star_score = 0
 
         if ($("#rating-5").is(":checked")) {
           star_score = 5
@@ -214,6 +241,8 @@
           event.preventDefault();
           $("#exampleModal").modal('show');
       }
+
+      
 
     </script>
 
@@ -266,7 +295,7 @@
                     <div class="mb-3 ">
                       <div class="widget widget_search">
                         <label class="form-label">내 별점</label>
-                        <input type="text" class="form-control d-none" id="star_score"> <!--숨겨짐-->
+                        <input type="text" class="form-control d-none" id="star_score" value="0"> <!--숨겨짐-->
                         <div class="rating" onclick="star_score_calculator();">
                           <input type="radio" name="rating" id="rating-5">
                           <label for="rating-5"></label>
@@ -289,7 +318,7 @@
                       class="post-block single-post wow fadeInUp"
                       data-wow-delay="0.6s"
                     >
-                      <div class="post-holder">
+                      <div class="post-holder" id="post-here">
                           <div class="mb-3">
                             <textarea id="review_content" name="editordata" required></textarea>
                           </div>

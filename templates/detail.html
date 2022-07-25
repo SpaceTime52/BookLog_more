@@ -35,20 +35,25 @@
 
     <script>
 
-        $(document).ready(function () {
+        $(document).ready(async function () {
 
             render_nav();
             render_loginRegisterModal();
-            checkLogin();
+            await checkLogin();
 
             let stars = "⭐️".repeat('{{book_score}}');
             document.getElementById('stars').innerHTML = stars;
+            
+            // 접속한 닉네임과 이 페이지의 닉네임이 다르면, 
 
-            if ($("#nickname_nav").text() != '{{book_nick}}'){
+            setTimeout(() => {
+                if ($("#nickname_nav").text() != '{{book_nick}}'){
+
                 $('#go-edit').addClass("d-none")
                 $('#go-delete').addClass("d-none")
-            }
-
+            }},300)
+            
+            
         });
 
     </script>
