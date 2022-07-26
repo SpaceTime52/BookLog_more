@@ -1,4 +1,4 @@
-﻿//쿠키가 있으면 답변을 받을 수 있을거임
+﻿// 쿠키를 확인해서, 로그인 정보를 받고, 상단 nav 바 class를 바꾸어 표시
 function checkLogin() {
   $.ajax({
     type: "GET",

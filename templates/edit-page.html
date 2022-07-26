@@ -45,6 +45,7 @@
         render_nav();
         render_loginRegisterModal();
         checkLogin();
+        permissionToEdit();
         var img_url = ''
 
         star_score_visualizer(parseInt('{{star_score}}'));
@@ -242,6 +243,22 @@
           $("#exampleModal").modal('show');
       }
 
+      // 게시글 edit, delete 권한 확인 후 class 변경
+      function permissionToEdit() {
+        $.ajax({
+          type: "GET",
+          url: "/check-login",
+          data: {},
+          success: function (response) {
+
+            if (response["nickname"] != '{{book_nick}}'){
+              alert('수정 권한이 없습니다.')
+              window.history.back()
+            }
+
+          },
+        });
+      }
       
 
     </script>

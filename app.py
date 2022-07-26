@@ -180,11 +180,12 @@ def update_review():
 
 
 # 리뷰 삭제
-@app.route('/delete/<reviewNo>')
+@app.route('/delete/<reviewNo>', methods=['POST'])
 def delete_review(reviewNo):
+    
     review_db.review_test.delete_one({'content_no': int(reviewNo)})
 
-    return render_template("index.html")
+    return jsonify({'message': '삭제가 완료되었습니다.'})
 
 
 # naverapi에서 검색어 정보를 불러오는 코드

@@ -46,15 +46,70 @@
             
             // 접속한 닉네임과 이 페이지의 닉네임이 다르면, 
 
-            setTimeout(() => {
-                if ($("#nickname_nav").text() != '{{book_nick}}'){
-
-                $('#go-edit').addClass("d-none")
-                $('#go-delete').addClass("d-none")
-            }},300)
+            await permissionToEdit();
             
             
         });
+
+        // 게시글 edit, delete 권한 확인 후 class 변경
+        function permissionToEdit() {
+            $.ajax({
+              type: "GET",
+              url: "/check-login",
+              data: {},
+              success: function (response) {
+
+                if (response["nickname"] != '{{book_nick}}'){
+
+                    $('#go-edit').addClass("d-none")
+                    $('#go-delete').addClass("d-none")
+                }
+
+              },
+            });
+          }
+
+          function deleteReview(){
+
+            console.log('deleteReview');
+
+            $.ajax({
+                type: "GET",
+                url: "/check-login",
+                data: {},
+                success: function (response) {
+  
+                    if (response["nickname"] != '{{book_nick}}'){
+                        alert('삭제 권한이 없습니다.')
+                        window.history.back()
+                        return;
+                    } else {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/delete/{{book_num}}",
+                            data: {},
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                
+                              alert(response["message"])
+                              window.location.href = '/';
+                            },
+                        })
+
+                    } 
+  
+                },
+              })
+
+            
+
+
+          }
+
+
 
     </script>
 
@@ -98,7 +153,7 @@
                             <footer>
                                 <strong id="go-home" class="text"><a href="/" style = "text-decoration: none; color: white;"> <i class="fas fa-home px-2"></i>홈으로 이동</a></strong>
                                 <strong id="go-edit" class="text"><a href="/edit/{{book_num}}" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-pen-to-square px-2"></i>수정하기</a></strong>
-                                <strong id="go-delete" class="text"><a href="/delete/{{book_num}}" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
+                                <strong id="go-delete" class="text"><a href="javascript:deleteReview();" style = "text-decoration: none; color: white;"> <i class="fa-solid fa-trash px-2"></i>삭제하기</a></strong>
                             </footer>
 
                             </div>
