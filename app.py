@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from jinja2 import Undefined
 from pymongo import MongoClient
