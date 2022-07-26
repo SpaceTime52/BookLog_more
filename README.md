@@ -7,7 +7,7 @@
 ### Start here
 
 ```bash
-git clone https://github.com/rmadbstjd/BookLog.git
+git clone https://github.com/SpaceTime52/BookLog_more.git
 ls BookLog
 
 pip install flask, pymongo, pyjwt, xmltodict, requests
