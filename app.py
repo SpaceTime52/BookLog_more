@@ -63,27 +63,10 @@ def detail_bookdata(num):
     book_nick = book_list[0]['writer_nickname']
     book_time = book_list[0]['time']
     book_score = book_list[0]['star_score']
+    isbn = book_list[0]['isbn']
 
     return render_template("detail.html", book_title=book_title, book_content=book_content, book_imageurl=book_imageurl,
-                           book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick)
-
-
-# @app.route('/detail/login', methods=['POST'])
-# def login_state():
-
-#     user = list(review_db.review_test.find({"content_no": int(a)}, {'_id': False}))
-
-#     token_receive = request.cookies.get('mytoken')
-#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#     print(payload['nickname'])
-#     print(user[0]['writer_nickname'])
-#     if(payload['nickname'] != user[0]['writer_nickname']):
-#         print('다르다')
-#         return jsonify({'response':'test'});
-#     else:
-#         print('같다')
-
-
+                           book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick, isbn=isbn)
 
 # 작성페이지
 @app.route('/edit-page')
@@ -95,7 +78,6 @@ def edit_page():
 
     return render_template("edit-page.html")
                             # , nickname=nickname)
-
 
 # 수정페이지
 @app.route('/edit/<reviewNo>')
@@ -110,6 +92,20 @@ def edit_review(reviewNo):
 
     return render_template("edit-page.html", title=title, content=content, image=image_url, review_no=reviewNo,
                            isEdit=title, star_score=star_score)
+
+
+# 네이버를 통해 검색된 책의 정보들을 반환
+@app.route('/detail/<isbn>', methods=['POST'])
+def find_bookdetail_from_naver(isbn):
+
+    header_info = {"X-Naver-Client-Id": "0g0WhKXaBnkuD7TS7sEC", "X-Naver-Client-Secret": "EV_4uF2dqi"}
+    r = requests.get('https://openapi.naver.com/v1/search/book_adv.xml?d_isbn=' + str(isbn), headers=header_info)
+
+    o = xmltodict.parse(r.text)
+    result = json.dumps(o, ensure_ascii=False)
+    data = json.loads(result)['rss']['channel']['item']
+
+    return jsonify(data)
 
 
 # 네이버를 통해 검색된 책자의 리뷰를 작성
@@ -127,8 +123,11 @@ def find_bookdetail_via_isbn(isbn):
     image_url = data['rss']['channel']['item']['image']
     author = data['rss']['channel']['item']['author']
     description = data['rss']['channel']['item']['description']
+    pubdate = data['rss']['channel']['item']['pubdate']
+    publisher = data['rss']['channel']['item']['publisher']
+    
 
-    return render_template("edit-page.html", title=title, image=image_url, author=author, description=description)
+    return render_template("edit-page.html", title=title, image=image_url, author=author, description=description, isbn=isbn, pubdate=pubdate, publisher=publisher)
 
 
 # 작성된 리뷰를 저장
@@ -143,6 +142,7 @@ def save_review():
     review_content = request.form['review_content_give']
     img_url = request.form['imgfile_give']
     writer_nickname = request.form['writer_nickname']
+    isbn = request.form['isbn']
     star_score = int(request.form['star_score'])
 
     doc = {
@@ -152,7 +152,8 @@ def save_review():
         'time': datetime.now().strftime('%Y.%m.%d.%H:%M:%S'),
         'writer_nickname': writer_nickname,
         'star_score': star_score,
-        'content_no': review_count
+        'content_no': review_count,
+        'isbn' : isbn 
     }
 
     review_db.review_test.insert_one(doc)
@@ -266,16 +267,6 @@ def check_nickname():
     print(exists)
     
     return jsonify({'result': 'success', 'exists': exists})
-
-
-# # 로그인 정보 받기
-# @app.route('/index/addnick', methods=['POST'])
-# def add_nick():
-#     token_receive = request.cookies.get('mytoken')
-#     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#     nickname = payload['nickname']
-
-#     return jsonify({'nick': nickname})
 
 
 # 토큰을 전달받아 로그인 된 것이 맞는지 다시 한번 확인해서 이용자 정보를 반환하는 서버

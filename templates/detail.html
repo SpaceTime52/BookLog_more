@@ -1,119 +1,142 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="utf-8" />
-    <title>북로그 자세히 보기</title>
+    <head>
+        <meta charset="utf-8" />
+        <title>북로그 자세히 보기</title>
 
-    <!-- Bootstrap & FontAwsome -->
-    <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-    crossorigin="anonymous"
-    />
-    <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"
-    ></script>
-    <script src="https://kit.fontawesome.com/8e7edfdec4.js" crossorigin="anonymous"></script>
-  
-    <!-- JQuery를 import 합니다 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <!-- Bootstrap & FontAwsome -->
+        <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous"
+        />
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+        ></script>
+        <script src="https://kit.fontawesome.com/8e7edfdec4.js" crossorigin="anonymous"></script>
+    
+        <!-- JQuery를 import 합니다 -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
 
-    <!-- Local CSS & JS import -->
-    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
-    <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
-    <link rel="stylesheet" href="{{ url_for("static", filename="slick.css") }}">
-    <link rel="stylesheet"  href="{{ url_for("static", filename="animate.css") }}">
-    <link rel="stylesheet"  href="{{ url_for("static", filename="style_2nd.css") }}">
-    <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
-    <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
-    <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
+        <!-- Local CSS & JS import -->
+        <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}"/>
+        <link rel="stylesheet" href="{{ url_for("static", filename="star_rating.css") }}"/>
+        <link rel="stylesheet" href="{{ url_for("static", filename="slick.css") }}">
+        <link rel="stylesheet"  href="{{ url_for("static", filename="animate.css") }}">
+        <link rel="stylesheet"  href="{{ url_for("static", filename="style_2nd.css") }}">
+        <link rel="stylesheet"  href="{{ url_for("static", filename="responsive.css") }}">
+        <link rel="stylesheet"  href="{{ url_for("static", filename="colors.css") }}">
+        <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
 
-    <script>
+        <script>
 
-        $(document).ready(async function () {
+            $(document).ready(async function () {
 
-            render_nav();
-            render_loginRegisterModal();
-            await checkLogin();
+                render_nav();
+                render_loginRegisterModal();
+                await checkLogin();
 
-            let stars = "⭐️".repeat('{{book_score}}');
-            document.getElementById('stars').innerHTML = stars;
-            
-            // 접속한 닉네임과 이 페이지의 닉네임이 다르면, 
+                let stars = "⭐️".repeat('{{book_score}}');
+                document.getElementById('stars').innerHTML = stars;
+                
+                // 접속한 닉네임과 이 페이지의 닉네임이 다르면, 
 
-            await permissionToEdit();
-            
-            
-        });
-
-        // 게시글 edit, delete 권한 확인 후 class 변경
-        function permissionToEdit() {
-            $.ajax({
-              type: "GET",
-              url: "/check-login",
-              data: {},
-              success: function (response) {
-
-                if (response["nickname"] != '{{book_nick}}'){
-
-                    $('#go-edit').addClass("d-none")
-                    $('#go-delete').addClass("d-none")
-                }
-
-              },
+                await permissionToEdit();
+                await showBookInfo();
+                
             });
-          }
 
-          function deleteReview(){
+            // 게시글 edit, delete 권한 확인 후 class 변경
+            function permissionToEdit() {
 
-            console.log('deleteReview');
-
-            $.ajax({
+                $.ajax({
                 type: "GET",
                 url: "/check-login",
                 data: {},
                 success: function (response) {
-  
+
                     if (response["nickname"] != '{{book_nick}}'){
-                        alert('삭제 권한이 없습니다.')
-                        window.history.back()
-                        return;
-                    } else {
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/delete/{{book_num}}",
-                            data: {},
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (response) {
-                                
-                              alert(response["message"])
-                              window.location.href = '/';
-                            },
-                        })
+                        $('#go-edit').addClass("d-none")
+                        $('#go-delete').addClass("d-none")
+                    }
 
-                    } 
-  
                 },
-              })
-
+                });
             
+            }
+
+            // 게시글 삭제하기
+            function deleteReview(){
+
+                $.ajax({
+                    type: "GET",
+                    url: "/check-login",
+                    data: {},
+                    success: function (response) {
+
+                        if (response["nickname"] != '{{book_nick}}'){
+                            alert('삭제 권한이 없습니다.')
+                            window.history.back()
+                            return;
+                        } else {
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/delete/{{book_num}}",
+                                data: {},
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (response) {
+                                    
+                                    alert(response["message"])
+                                    window.location.href = '/';
+                                },
+                            })
+
+                        } 
+
+                    },
+                })
+
+            }
 
 
-          }
+            // 전달받은 isbn으로 naverAPI를 통해 데이터 받기
+            function showBookInfo(){
+
+                $.ajax({
+                    type: "POST",
+                    url: "/detail/{{isbn}}",
+                    data: {},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        
+                        $("#info-author").text(response['author'])
+                        $("#info-description").text(response['description'])
+                        $("#info-isbn").text('{{isbn}}')
+                        $("#info-price").text(response['price'])
+                        $("#info-pubdate").text(response['pubdate'])
+                        $("#info-publisher").text(response['publisher'])
+                        
+                    },
+                })
+
+            }
 
 
 
-    </script>
+        </script>
 
-</head>
+    </head>
     <body>
         <!-- 공통 header -->
         <div id="header-slot"></div>
@@ -190,49 +213,22 @@
                             </header>
                             <ul>
                             <li class="cat-item cat-item-1">
-                                <span><a href="#">저자</a></span
-                                ><span><a href="#">- Lifestyle</a></span>
+                                <span id = "info-author"></span>
                             </li>
                             <li class="cat-item cat-item-1">
-                                <span><a href="#">- Movie</a></span
-                                ><span><a href="#">- Movie</a></span>
+                                <span id = "info-isbn"></span>
+                                <span id = "info-price"></span>
                             </li>
                             <li class="cat-item cat-item-1">
-                                <span><a href="#">- Travel</a></span
-                                ><span><a href="#">- Travel</a></span>
+                                <span id = "info-pubdate"></span>
+                                <span id = "info-publisher"></span>
                             </li>
-                            <li class="cat-item cat-item-1">
-                                <span><a href="#">- Sports</a></span
-                                ><span><a href="#">- Sports</a></span>
-                            </li>
-                            <li class="cat-item cat-item-1">
-                                <span><a href="#">- Music</a></span
-                                ><span><a href="#">- Music</a></span>
-                            </li>
+                            <hr>
+                             <p id = "info-description"></p>
                             </ul>
                         </div>
                         <!-- Widget of the page end -->
-                        <!-- 저자 정보 -->
-                        <div
-                            class="widget widget-block wow fadeInUp"
-                            data-wow-delay="0.6s"
-                        >
-                            <div class="alignleft"></div>
-                            <div class="text-holder">
-                            <header>
-                                <h2>
-                                <a href="#"><strong>저자 </strong>장병규</a>
-                                </h2>
-                            </header>
-                            <p>
-                                Duis autem vel eum iriure dolor in hendrerit in vulputate
-                                velit esse molestie consequat, vel illum dolore eu feugiat
-                                nulla facilisis at vero eros et accumsan et iusto odio
-                                dignissim qui blandit praesent.
-                            </p>
-                            </div>
-                        </div>
-                        <!-- 저자 정보 end -->
+                    
                         </aside>
                         <!-- Sidebar of 책정보 end -->
                     </div>
@@ -254,5 +250,5 @@
             <!-- footer of the page end -->
         </div>
     
-    /body>
+    </body>
 </html>

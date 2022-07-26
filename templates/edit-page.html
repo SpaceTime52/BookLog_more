@@ -51,6 +51,7 @@
         star_score_visualizer(parseInt('{{star_score}}'));
 
         if ( '{{isEdit}}' ) {
+
           $("#naver_booksearch").hide();
           $("#review_content").val(`{{content | safe}}`)
           $("#star_score").val("{{star_score}}")
@@ -139,6 +140,7 @@
         form_data.append("review_content_give",review_content);
         form_data.append("writer_nickname", '김보현');
         form_data.append("star_score", star_score);
+        form_data.append("isbn", '{{isbn}}')
 
         if (!img_url) { 
           alert('책을 선택해주세요') 
@@ -251,8 +253,11 @@
           data: {},
           success: function (response) {
 
-            if (response["nickname"] != '{{book_nick}}'){
-              alert('수정 권한이 없습니다.')
+            if (!response["nickname"]){
+              alert('로그인을 해주세요.')
+              window.history.back()
+            } else if ( !response["nickname"] != '{{book_nick}}'){
+              alert('작성 권한이 없습니다.')
               window.history.back()
             }
 
