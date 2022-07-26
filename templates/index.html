@@ -34,6 +34,7 @@
     <script type="text/javascript"  src="{{ url_for("static", filename="script.js") }}"></script>
 
     <script type="text/javascript">
+
       $(document).ready(function () {
         render_nav();
         render_loginRegisterModal()
@@ -56,11 +57,9 @@
         });
       });
 
-      // let id_value = document.cookie.slice(8);
-
-      function filter() {
-
-        let value = document.getElementById("bookReviewSearch").value.toLowerCase(); 
+      function searchCategory(value) {
+        
+        $('#bookReviewSearch').val(value)
         let item = document.getElementsByClassName("book-item");
         
         for (let i = 0 ; i < item.length ; i++) {
@@ -68,32 +67,11 @@
           if (!item[i].innerText.toLowerCase().includes(value)) {
             item[i].style.display = "none";
           }
-
         }
 
       }
-
-
-      function addnick() {
-        $.ajax(
-          {
-              type: "POST",
-              url: "/index/addnick",
-              data: {
-              },
-              success: function(nick) {
-                $("#nickname").text(nick["nick"])
-              },
-        });
-      }
-
-      function cantclick() {
-        if (document.cookie == "") {
-          alert("로그인을 해주세요.")
-        }else {
-          window.location.href = '/edit-page'
-        }
-      }
+      
+    
 
       function listing() {
         // document.ready에 요청
@@ -105,6 +83,18 @@
 
             let rows = response["books"];
 
+            // 카테고리 리스트 만들기 
+            let array = rows.map((e) => {return e.category});
+            let countThis = Array.from(new Set(array));
+            let counter = countThis.map((e, i) => {
+
+              let countCategory = array.filter(el => el === e).length
+              let temp_html = `<li class="cat-item cat-item-1">
+                            <a href="javascript:searchCategory($('#category_${i}').text())" id="category_${i}">${e}</a> <span> (${countCategory})</span></li>`;
+              $("#category-listing").append(temp_html);
+            })
+
+            // 카드 만들기
             for (let i = 0; i < rows.length; i++) {
               let content = rows[i]["content"];
               let file = rows[i]["file"];
@@ -112,6 +102,7 @@
               let time = rows[i]["time"];
               let number = rows[i]["content_no"];
               let nickname = rows[i]["writer_nickname"];
+              let category = rows[i]["category"];
               let star = rows[i]["star_score"];
               let star_img = "⭐️".repeat(star);
 
@@ -122,7 +113,7 @@
                                   <div class="img-holder"><a href="/detail/${number}"><img src="${file}" alt="${title}"></a></div>
                                   <div class="text-wrap">
                                     <h5><a href="/detail/${number}" >${title}</a></h5>
-                                    <p>${star_img}</p>
+                                    <p>${star_img}ㅤㅤ|ㅤㅤ${category}</p>
                                     <a href="javascript: changeInputValue('${nickname}')" class="link-more">${nickname}</a>
                                   </div>
                                 </div
@@ -187,56 +178,14 @@
 
                 <button onclick = "location.href = '/edit-page'" type="button" id="write-button"> 북리뷰 작성하기 </button>
 
-                <!-- 새 책 소개 from API -->
-                <section class="widget recent-posts-widget wow fadeInUp" data-wow-delay="0.6s">
-                  <header class="widget-head">
-                    <h3>Recent Posts</h3>
-                    <p>post those are very recent in Dot</p>
-                  </header>
-                  <ol>
-                    <li>
-                      <h4><a href="single-post.html">I get up in the morning looking <br>for an adventure.</a></h4>
-                      <span class="post-tag">
-                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
-                        <strong class="tag hot">HOT</strong>
-                      </span>
-                    </li>
-                    <li>
-                      <h4><a href="single-post.html">Letter from the desk of an <br>unsuccessful designer.</a></h4>
-                      <span class="post-tag">
-                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
-                        <strong class="tag">trending</strong>
-                      </span>
-                    </li>
-                    <li>
-                      <h4><a href="single-post.html">Exploring the unknow truth about myself - My Story.</a></h4>
-                      <span class="post-tag">
-                        <time datetime="2011-01-12"><a href="#">25th may</a></time>
-                      </span>
-                    </li>
-                  </ol>
-                </section>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 새 책 소식 담기 -->
-                <!-- 새 책 소개 from API ends -->
                 <!-- 카테고리 카운트 + 눌렀을 때 검색 기능 -->
                 <div class="widget widget_categories tabs wow fadeInUp" data-wow-delay="0.6s">
                   <header class="widget-head">
                     <h3>Category</h3>
-                    <p>browse all your favourite categories</p>
+                    <hr>
                   </header>
                   <div class="lists-holder">
-                    <ul>
-                      <li class="cat-item cat-item-1"><a href="#">Lifestyle </a> (23)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Movie </a> (02)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Travel </a> (11)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Sports </a> (05)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Music </a> (01)</li>
-                    </ul>
-                    <ul>
-                      <li class="cat-item cat-item-1"><a href="#">Education </a> (15)</li>
-                      <li class="cat-item cat-item-1"><a href="#">International </a> (09)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Design </a> (26)</li>
-                      <li class="cat-item cat-item-1"><a href="#">News </a> (01)</li>
-                      <li class="cat-item cat-item-1"><a href="#">Review </a> (14)</li>
+                    <ul id = "category-listing">
                     </ul>
                   </div>
                 </div>  <!-- ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ 카테고리 카운트 & 검색 기능에 추가 -->

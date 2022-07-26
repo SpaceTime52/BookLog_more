@@ -64,9 +64,11 @@ def detail_bookdata(num):
     book_time = book_list[0]['time']
     book_score = book_list[0]['star_score']
     isbn = book_list[0]['isbn']
+    category = book_list[0]['category']
+
 
     return render_template("detail.html", book_title=book_title, book_content=book_content, book_imageurl=book_imageurl,
-                           book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick, isbn=isbn)
+                           book_time=book_time, book_num=num, book_score=book_score, book_nick=book_nick, isbn=isbn, category=category)
 
 # 작성페이지
 @app.route('/edit-page')
@@ -89,9 +91,10 @@ def edit_review(reviewNo):
     content = book_list[0]['content']
     image_url = book_list[0]['file']
     star_score = book_list[0]['star_score']
+    category = book_list[0]['category']
 
     return render_template("edit-page.html", title=title, content=content, image=image_url, review_no=reviewNo,
-                           isEdit=title, star_score=star_score)
+                           isEdit=title, star_score=star_score, category=category)
 
 
 # 네이버를 통해 검색된 책의 정보들을 반환
@@ -143,6 +146,7 @@ def save_review():
     img_url = request.form['imgfile_give']
     writer_nickname = request.form['writer_nickname']
     isbn = request.form['isbn']
+    category = request.form['category']
     star_score = int(request.form['star_score'])
 
     doc = {
@@ -153,7 +157,8 @@ def save_review():
         'writer_nickname': writer_nickname,
         'star_score': star_score,
         'content_no': review_count,
-        'isbn' : isbn 
+        'isbn' : isbn,
+        'category' : category 
     }
 
     review_db.review_test.insert_one(doc)
@@ -168,11 +173,14 @@ def update_review():
     review_content = request.form['review_content_give']
     content_no = int(request.form['edited_content_no'])
     star_score = int(request.form['star_score'])
+    category = request.form['category']
+
 
     doc = {
         'title': booktitle,
         'content': review_content,
         'star_score': star_score,
+        'category' : category 
     }
 
     review_db.review_test.update_one({'content_no': content_no}, {'$set': doc})
@@ -291,6 +299,8 @@ def checkLogin():
         
         return jsonify({"msg": "로그인 정보가 존재하지 않습니다."})
     
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

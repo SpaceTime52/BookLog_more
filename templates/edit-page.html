@@ -46,12 +46,14 @@
         render_loginRegisterModal();
         checkLogin();
         permissionToEdit();
-        var img_url = ''
+
+        let img_url = ''
 
         star_score_visualizer(parseInt('{{star_score}}'));
 
         if ( '{{isEdit}}' ) {
 
+          $('#selectedCategory').text(`{{category}}`)
           $("#naver_booksearch").hide();
           $("#review_content").val(`{{content | safe}}`)
           $("#star_score").val("{{star_score}}")
@@ -90,7 +92,7 @@
       });
 
       function booksearch_listing() {
-        var data = $('#booknameSearch').val();
+        let data = $('#booknameSearch').val();
         $.ajax({
           type: "POST",
           url: "/api/call-bookinfo",
@@ -131,6 +133,7 @@
         let img_url = '{{image}}'.split('?')[0];
         // let writer = $("#nickname").text().split(' ')[0]
         let star_score = parseInt($("#star_score").val());
+        let category = $('#selectedCategory').text();
 
         // FormData 객체에 담아, 전송 준비
         let form_data = new FormData();
@@ -140,7 +143,8 @@
         form_data.append("review_content_give",review_content);
         form_data.append("writer_nickname", '김보현');
         form_data.append("star_score", star_score);
-        form_data.append("isbn", '{{isbn}}')
+        form_data.append("isbn", '{{isbn}}');
+        form_data.append("category", category);
 
         if (!img_url) { 
           alert('책을 선택해주세요') 
@@ -264,7 +268,12 @@
           },
         });
       }
-      
+
+      function categorize(str) { 
+
+          $('#selectedCategory').text(str)
+
+      }
 
     </script>
 
@@ -314,7 +323,24 @@
                       />
                     </div>
 
-                    <div class="mb-3 ">
+                    <!-- Example split danger button -->
+                    <div class="btn-group mb-3">
+                      <button type="button" id="selectedCategory" class="btn btn-warning">카테고리 선택</button>
+                      <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="javascript:categorize('소설/문학')">소설/문학</a></li>
+                        <li><a class="dropdown-item" href="javascript:categorize('교양/인문')">교양/인문</a></li>
+                        <li><a class="dropdown-item" href="javascript:categorize('경제/경영')">경제/경영</a></li>
+                        <li><a class="dropdown-item" href="javascript:categorize('자기계발')">자기계발</a></li>
+                        <li><a class="dropdown-item" href="javascript:categorize('기술/학습')">기술/학습</a></li>
+                        <li><a class="dropdown-item" href="javascript:categorize('건강/기타')">건강/기타</a></li>
+                        
+                      </ul>
+                    </div>
+
+                    <div class="mb-3">
                       <div class="widget widget_search">
                         <label class="form-label">내 별점</label>
                         <input type="text" class="form-control d-none" id="star_score" value="0"> <!--숨겨짐-->
